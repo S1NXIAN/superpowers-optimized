@@ -1,5 +1,5 @@
 ---
-description: Superpowers-driven development. Orchestrator for architecture, planning, review, and subagent dispatch. Uses capable model with max reasoning.
+description: "Superpowers orchestrator: drives brainstorming, planning, code review, and subagent dispatch. Use for ANY software development task."
 mode: primary
 model: opencode/deepseek-v4-flash-free
 permission:
