@@ -6,3 +6,25 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# AI Agent Artifacts
+.agents/
+.antigravitycli/
+.gemini/
+skills-lock.json
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+*.log
+
+# IDEs and Editors
+.vscode/
+.idea/
+
+# Local Environment and Workspaces
+.env
+.env.*
+.local
+.opencode/
