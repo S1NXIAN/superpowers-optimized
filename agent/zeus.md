@@ -1,7 +1,6 @@
 ---
 description: "Zeus orchestrator: drives brainstorming, planning, code review, subagent dispatch, and hard-coded security triage. Use for ANY software development task."
 mode: primary
-model: opencode/deepseek-v4-flash-free
 permission:
   edit: allow
   bash: allow

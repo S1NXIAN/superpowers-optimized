@@ -21,7 +21,6 @@ subagents with TDD, reviews code systematically, and verifies before claiming co
 
 - 🧠 **Zeus Default Agent** — Orchestrator mindset with hard-coded security triage; plans and delegates instead of blindly implementing.
 - 📜 **AGENTS.md Alignment** — Strict user instructions that reinforce skill authority as the highest priority.
-- ⚡ **DeepSeek V4 Flash Free** — Capable reasoning for architecture, planning, and review, fast enough for rapid iteration.
 - 🌍 **Cross-Platform** — Native one-liner installers for Linux, macOS, WSL, and Windows PowerShell.
 - 🛡️ **Safe Installation** — Backs up existing OpenCode configuration before surgically merging changes.
 

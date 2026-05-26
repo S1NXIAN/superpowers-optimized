@@ -15,8 +15,7 @@
   "autoupdate": false,
   "default_agent": "zeus",
   "instructions": ["AGENTS.md"],
-  "model": "opencode/deepseek-v4-flash-free",
-  "small_model": "opencode/deepseek-v4-flash-free",
+  "enable_experimental_skills": true,
   "skills": {
     "paths": ["skills/superpowers-enhanced"]
   }
