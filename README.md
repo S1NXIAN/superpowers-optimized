@@ -10,8 +10,8 @@ subagents with TDD, reviews code systematically, and verifies before claiming co
 - **Zeus default agent** — orchestrator mindset with hard-coded security triage, not an implementer
 - **AGENTS.md alignment** — user instructions that reinforce skill authority (highest priority)
 - **DeepSeek V4 Flash Free** — capable reasoning for architecture/planning/review, fast enough for iteration
-- **Self-validating setup** — checks Superpowers is installed before configuring
-- **Safe install** — backs up existing files, shows diff, asks before overwriting
+- **Cross-platform installer** — Node.js script works on Linux, macOS, and Windows
+- **Safe install** — backs up existing files before overwriting, dry-run mode for preview
 
 ### Enhanced Protocols
 
@@ -40,9 +40,9 @@ subagents with TDD, reviews code systematically, and verifies before claiming co
 # Clone
 git clone <repo-url> ~/superpowers-opencode
 
-# Install (symlinks repo → ~/.config/opencode/)
+# Install (copies repo files into ~/.config/opencode/)
 cd ~/superpowers-opencode
-./setup.sh
+node setup.mjs
 
 # Quit and restart OpenCode
 ```
@@ -50,28 +50,30 @@ cd ~/superpowers-opencode
 The setup script will:
 1. Verify OpenCode exists at `~/.config/opencode/`
 2. Verify the Superpowers plugin is declared and installed
-3. Validate your existing `opencode.json` is valid JSON
-4. Show a diff of planned changes
+3. Show planned changes (opencode.json merge diff + files to copy)
+4. Prompt for confirmation (unless `--force`)
 5. Back up existing files before overwriting
-6. Symlink repo files → config directory
-7. Symlink enhanced skills for discoverability
-8. Verify everything is connected correctly
+6. Surgically edit opencode.json (merge specific fields, preserve everything else)
+7. Copy AGENTS.md, agent/zeus.md, skills/, prompts/, scripts/ to config directory
+8. Verify everything is installed correctly
 
 ### Non-interactive install
 
 ```bash
-./setup.sh --force     # skip prompts
-./setup.sh --dry-run   # preview only, no changes
+node setup.mjs --force     # skip prompts
+node setup.mjs --dry-run   # preview only, no changes
 ```
 
 ## What's Installed
 
 | File | Destination | Purpose |
 |------|-------------|---------|
-| `opencode.json` | `~/.config/opencode/opencode.json` | Model, plugins, default_agent, instructions, skills.paths |
+| `opencode.json` | `~/.config/opencode/opencode.json` | Merges plugin, default_agent, instructions, skills.paths (preserves everything else) |
 | `AGENTS.md` | `~/.config/opencode/AGENTS.md` | User instructions — highest priority (outranks skills) |
 | `agent/zeus.md` | `~/.config/opencode/agent/zeus.md` | Custom orchestrator agent, set as default |
 | `skills/` | `~/.config/opencode/skills/superpowers-enhanced/` | Custom skills (ASI Loop, Deliberation Gate, Social Accountability) |
+| `prompts/` | `~/.config/opencode/prompts/` | Enhanced subagent prompt templates |
+| `scripts/verify-hash.sh` | `~/.config/opencode/scripts/verify-hash.sh` | Ephemeral State Hashing (anti-TOCTOU) |
 
 ### Configuration details
 
@@ -221,17 +223,13 @@ The result is an agent that:
 After installation, verify the setup:
 
 ```bash
-# Check symlinks are correct
+# Check files exist
 ls -la ~/.config/opencode/opencode.json
 ls -la ~/.config/opencode/AGENTS.md
 ls -la ~/.config/opencode/agent/zeus.md
 ls -la ~/.config/opencode/skills/superpowers-enhanced/
 
-# Each should point to the repo:
-#   ~/.config/opencode/opencode.json -> ~/superpowers-opencode/opencode.json
-#   ...
-
-# Verify enhanced skills are discoverable
+# Verify each skill has a SKILL.md
 ls ~/.config/opencode/skills/superpowers-enhanced/*/SKILL.md
 
 # Test the hash verification script
@@ -278,11 +276,11 @@ The body is the system prompt.
 
 ```bash
 cd ~/superpowers-opencode
-./uninstall.sh
+node uninstall.mjs
 ```
 
-This removes all symlinks (files + skills directory) and restores the most recent backup
-if one exists.
+This reverts opencode.json changes, removes copied files and directories, and restores
+the most recent backup if one exists.
 
 To fully remove Superpowers from your config, delete the plugin line from `opencode.json`:
 
@@ -299,11 +297,11 @@ To fully remove Superpowers from your config, delete the plugin line from `openc
    "plugin": ["superpowers@git+https://github.com/obra/superpowers.git"]
    ```
 2. Restart OpenCode so it resolves and installs the plugin.
-3. Run `./setup.sh` again.
+3. Run `node setup.mjs` again.
 
 ### Enhanced skills not auto-triggering
 
-1. Verify the symlink: `ls -la ~/.config/opencode/skills/superpowers-enhanced/`
+1. Verify the files exist: `ls ~/.config/opencode/skills/superpowers-enhanced/`
 2. Check skills.paths in opencode.json contains `"skills/superpowers-enhanced"`
 3. Verify each skill has a valid `SKILL.md` with YAML frontmatter
 4. Restart OpenCode — skills are loaded at startup
@@ -315,23 +313,16 @@ To fully remove Superpowers from your config, delete the plugin line from `openc
 3. Restart OpenCode — config is loaded once at startup.
 4. OpenCode >= 0.11.0 required for `experimental.chat.system.transform` hook support.
 
-### "Command not found" during setup
+### Setup script fails
 
-The setup script uses standard POSIX tools. Install any missing tools:
-
-```bash
-# For JSON validation (optional — setup falls back to python3 or node)
-sudo pacman -S jq          # Arch
-sudo apt install jq        # Debian/Ubuntu
-brew install jq            # macOS
-```
+The setup script requires Node.js (which OpenCode also requires). Install Node.js from [nodejs.org](https://nodejs.org/) if not already available.
 
 ## Updating
 
 ```bash
 cd ~/superpowers-opencode
 git pull
-./setup.sh --force
+node setup.mjs --force
 ```
 
 Changes take effect after restarting OpenCode.
@@ -344,6 +335,8 @@ superpowers-opencode/
 ├── LICENSE                # MIT
 ├── README.md              # This file
 ├── opencode.json          # OpenCode configuration
+├── setup.mjs              # Installer script (cross-platform Node.js)
+├── uninstall.mjs          # Uninstaller script (cross-platform Node.js)
 ├── agent/
 │   └── zeus.md             # Custom orchestrator agent (default)
 ├── skills/
@@ -361,8 +354,10 @@ superpowers-opencode/
 │   └── code-quality-reviewer.md  # Enhanced code reviewer prompt
 ├── scripts/
 │   └── verify-hash.sh     # Ephemeral State Hashing (anti-TOCTOU)
-├── setup.sh               # Install script with validation
-└── uninstall.sh           # Clean removal script
+└── docs/
+    └── superpowers/
+        ├── specs/
+        └── plans/
 ```
 
 ## License
