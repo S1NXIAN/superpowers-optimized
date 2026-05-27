@@ -153,6 +153,29 @@ superpowers-enhanced/
     └── social-accountability/
 ```
 
+## Updating
+
+Re-run the one-liner installer — it's designed to be idempotent:
+
+```bash
+# Linux / macOS / WSL
+bash <(curl -fsSL https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced/main/install.sh)
+
+# Windows (PowerShell)
+irm https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced/main/install.ps1 | iex
+```
+
+On re-run, the installer:
+
+- **Merges config** — only adds fields that are missing or different. If your `opencode.json` already has the right values, nothing changes.
+- **Overwrites files** — `AGENTS.md`, `zeus.md`, `scripts/verify-hash.sh`, skills, and prompts get the latest versions. Originals are backed up to `~/.config/opencode/.backups/<timestamp>/` before overwriting.
+- **Preserves everything else** — model/provider config, API keys, any extra files you placed in the skills or prompts directories.
+
+> [!TIP]
+> Run `node setup.mjs --dry-run` first to preview what would change without touching anything.
+
+Restart OpenCode after updating for changes to take effect.
+
 ## Uninstall
 
 One-liner (no clone needed):
