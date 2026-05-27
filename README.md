@@ -4,37 +4,42 @@
 
 *An opinionated OpenCode configuration that enforces disciplined, secure, and systematic software development through the [Superpowers](https://github.com/obra/superpowers) methodology.*
 
-[![Node version](https://img.shields.io/badge/Node.js-%3E%3D18-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Install - Bash](https://img.shields.io/badge/Install-Bash-4EAA25?style=flat-square&logo=gnubash&logoColor=white)](install.sh)
-[![Install - PowerShell](https://img.shields.io/badge/Install-PowerShell-5391FE?style=flat-square&logo=powershell&logoColor=white)](install.ps1)
+[![Node version](https://img.shields.io/badge/Node.js-%3E%3D18-339933?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Install - Bash](https://img.shields.io/badge/Bash-4EAA25?style=flat-square&logo=gnubash&logoColor=white)](install.sh)
+[![Install - PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=flat-square&logo=powershell&logoColor=white)](install.ps1)
 [![License - MIT](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
----
-
-[Quick Start](#quick-start) · [What's Included](#whats-included) · [Enhanced Protocols](#enhanced-protocols) · [How It Works](#how-it-works) · [Uninstall](#uninstall)
+[Quick Start](#quick-start) · [What's Included](#whats-included) · [Protocols](#protocols) · [How It Works](#how-it-works) · [Updating](#updating) · [Uninstall](#uninstall)
 
 </div>
 
-Superpowers Enhanced turns OpenCode from a chat interface into a disciplined development orchestrator. Instead of blindly implementing, your agent brainstorms designs, writes plans, dispatches sub-agents with TDD, runs hard-coded security triage on every task, reviews code before merging, and verifies before claiming completion.
+OpenCode agents default to implementation mode: you describe what you want, and they start writing code. This works for simple tasks, but for anything involving security, multiple files, or iterative refinement, it falls apart quickly.
 
-This is a **downstream configuration overlay** for `obra/superpowers`. It does not fork or modify upstream — it adds custom skills, an orchestrator agent (Zeus), enhanced prompts, and strict process instructions on top of the standard Superpowers plugin.
+Superpowers Enhanced gives your agent an **operating system**. Instead of jumping straight to code, it brainstorms designs, writes plans, dispatches sub-agents with TDD, runs hard-coded security triage on every task, and verifies before claiming completion — all gated by mandatory reviews.
+
+This is a **downstream configuration overlay** for [`obra/superpowers`](https://github.com/obra/superpowers). It doesn't fork or modify upstream — it adds custom skills, an orchestrator agent (Zeus), enhanced prompts, and process enforcement on top of the standard Superpowers plugin.
 
 ## Quick Start
 
 > [!NOTE]
-> No dependencies needed — the installer handles everything automatically, including Node.js if missing.
+> No dependencies needed. The installer detects your OS, installs Node.js if missing, and applies the configuration.
 
-**Linux / macOS / WSL:**
 ```bash
+# Linux / macOS / WSL
 bash <(curl -fsSL https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced/main/install.sh)
-```
 
-**Windows (PowerShell):**
-```powershell
+# Windows (PowerShell)
 irm https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced/main/install.ps1 | iex
 ```
 
-**Manual / non-interactive:**
+Once installed, restart OpenCode and try:
+
+> _"Let's build a todo list"_
+
+The `brainstorming` skill should trigger before any code is written. If it jumps straight to implementation, see [troubleshooting](#troubleshooting).
+
+### Manual install
+
 ```bash
 git clone https://github.com/S1NXIAN/superpowers-enhanced.git ~/superpowers-enhanced
 cd ~/superpowers-enhanced
@@ -49,65 +54,49 @@ node setup.mjs --dry-run  # preview only
 ### Verify the install
 
 ```bash
-# Check the config
-ls ~/.config/opencode/AGENTS.md
-ls ~/.config/opencode/agent/zeus.md
-
-# Verify default agent is set
+ls ~/.config/opencode/AGENTS.md ~/.config/opencode/agent/zeus.md
 node -e "console.log(JSON.parse(require('fs').readFileSync(require('path').join(require('os').homedir(),'.config','opencode','opencode.json'),'utf8')).default_agent)"
 # Should output: zeus
 ```
 
-Then start a new OpenCode session and try: `"Let's build a todo list"`. The `brainstorming` skill should auto-trigger before any code is written.
+## Prerequisites
+
+- **OpenCode** installed (the config overlay requires it)
+- **Node.js 18+** (the installer can install it for you, or get it from [nodejs.org](https://nodejs.org/))
+
+Everything else — git, curl, wget, PowerShell — is detected and used if available but not required.
 
 ## What's Included
 
-| File / Directory | Purpose |
+| What | Purpose |
 |---|---|
-| `AGENTS.md` | Highest-priority instructions that enforce the Superpowers workflow |
-| `agent/zeus.md` | Orchestrator agent set as default — plans, delegates, reviews |
-| `skills/security-triage/` | Hard-coded security trigger rules (path, content, directory patterns) |
-| `skills/asi-loop/` | ASI batch patching — one-fix-at-a-time for multiple issues |
-| `skills/deliberation-gate/` | Multi-perspective architecture audit (Skeptic, Minimalist, Maintainer) |
-| `skills/social-accountability/` | Consequence-weighted framing for sub-agent prompts |
-| `prompts/` | Pre-framed templates for implementer, spec reviewer, code quality reviewer |
+| **Zeus agent** (`agent/zeus.md`) | Orchestrator set as default — plans, delegates, reviews. Never writes code directly. |
+| **Instruction hierarchy** (`AGENTS.md`) | Highest-priority rules that force the agent to follow the workflow. Outranks the system prompt. |
+| **Security triage** (`skills/security-triage/`) | Hard-coded trigger rules. Any file matching `*auth*/**`, `*secret*/**`, `*token*/**`, etc. automatically triggers a full audit. Not a judgment call. |
+| **ASI loop** (`skills/asi-loop/`) | When a scan finds multiple issues, fixes them one at a time with TDD and re-testing between each. Prevents batch-fix regressions. |
+| **Deliberation gate** (`skills/deliberation-gate/`) | Before architecting complex tasks, spawns three critics: Skeptic (scale failures), Minimalist (challenge additions), Maintainer (tech debt). |
+| **Social accountability** (`skills/social-accountability/`) | Sub-agent prompts carry consequence weights. Implementers know a missed test ships regressions. Reviewers know they're the last gate. |
+| **Prompts** (`prompts/`) | Pre-framed templates for implementer, spec reviewer, and code quality reviewer. Each includes role-specific accountability framing. |
+| **Ephemeral hashing** (`scripts/verify-hash.sh`) | SHA-256 verification to prevent TOCTOU exploits on security-critical patches. |
 
-The installer also adds the plugin `superpowers@git+https://github.com/obra/superpowers.git` to your OpenCode config and merges the fields `default_agent`, `instructions`, and `skills.paths` — everything else in your existing config is preserved.
+The installer also adds the Superpowers plugin to your `opencode.json` and merges the fields `default_agent`, `instructions`, `skills.paths`, `enable_experimental_skills`, and `autoupdate`. Everything else in your existing config — models, provider settings, API keys — is preserved.
 
 > [!TIP]
-> If anything goes wrong, the installer backs up your original config to `~/.config/opencode/.backups/<timestamp>/.` Run `node uninstall.mjs` to revert.
+> The installer backs up your original config to `~/.config/opencode/.backups/<timestamp>/` before any changes. See the [uninstall](#uninstall) section to revert.
 
-## Enhanced Protocols
+## Protocols
 
-Five custom protocols augment the standard Superpowers skills, enforcing discipline and security at every stage:
+These five custom protocols augment Superpowers' standard skills. They enforce discipline and security at specific gates in the development workflow:
 
-**1. Mandatory Security Triage** — Before any work, every file is checked against hard-coded triggers (T1: paths like `*auth*/**`, T2: code patterns like `SECRET_KEY`, T3: directories like `auth/`). If a trigger fires, the agent halts, runs a full security review checklist, and escalates. This is pattern matching, not judgment.
+| Gate | Protocol | What it prevents |
+|---|---|---|
+| Before any task | **Security triage** | Agent bypassing security review on a file that touches auth, secrets, tokens, or crypto |
+| Before architecture | **Deliberation gate** | Designing a system on flawed assumptions without adversarial review |
+| During implementation | **Social accountability** | Sub-agents producing low-quality work without understanding consequences |
+| During batch fixes | **ASI loop** | Breaking one fix while applying another in overlapping code |
+| On security patches | **Ephemeral hashing** | TOCTOU exploits where a compromised agent swaps payloads between check and use |
 
-**2. ASI Loop** — When a scan surfaces multiple issues, fixes them one at a time with TDD, re-testing only affected files between each fix. Prevents the common failure of breaking one fix while applying another. A cycle counter stops after 4 iterations to prevent infinite loops.
-
-**3. Deliberation Gate** — Before architecting complex tasks (4+ files, new subsystem), spawns three competing stakeholder roles: **Skeptic** (find where it fails at scale), **Minimalist** (challenge every addition), **Maintainer** (assess testability and tech debt). Each gets one un-debated response; surviving critiques are synthesized into the final design.
-
-**4. Ephemeral State Hashing** — SHA-256 hash verification to prevent TOCTOU exploits. After a sub-agent writes a file, its hash is stored. Before test execution, the hash is verified. Tampering between check and use blocks execution with an alert.
-
-```bash
-scripts/verify-hash.sh store path/to/file.py   # store hash after write
-scripts/verify-hash.sh verify path/to/file.py  # verify before test
-scripts/verify-hash.sh check                   # verify all tracked files
-scripts/verify-hash.sh status                  # show tracked files
-```
-
-**5. Social Accountability Framing** — Sub-agent prompts carry consequence-weighted instructions. Each role sees the real cost of failure: implementers know a missed test case ships regressions, reviewers know they are the last gate before production.
-
-## How It Works
-
-When OpenCode starts with this configuration:
-
-1. The **Superpowers plugin** loads and makes skills auto-trigger based on context.
-2. **AGENTS.md** is loaded as the highest-priority instruction, forcing the agent to follow the workflow.
-3. The **Zeus agent** is set as default, giving every session an orchestrator mindset.
-4. **Enhanced skills** are registered via `skills.paths`, making them available for the Zeus orchestrator to invoke.
-
-The integration flow is:
+### Integration flow
 
 ```text
 [Deliberation Gate] — before architecture for complex tasks
@@ -128,6 +117,27 @@ The integration flow is:
   finishing-a-development-branch → merge / PR / cleanup
 ```
 
+## How It Works
+
+When OpenCode starts with this configuration:
+
+1. The **Superpowers plugin** loads and makes skills auto-trigger based on context.
+2. **AGENTS.md** is loaded as the highest-priority instruction, forcing the agent to follow the workflow.
+3. The **Zeus agent** is set as default, giving every session an orchestrator mindset.
+4. **Enhanced skills** are registered via `skills.paths`, making them available for the orchestrator to invoke.
+
+The result is an agent that:
+
+- Runs **security triage** before every task (pattern matching, not judgment)
+- **Brainstorms** before building (explores intent, proposes approaches)
+- **Deliberates** before architecture (triple-critique for complex tasks)
+- Writes plans with **bite-sized tasks** (2-5 minutes each, complete code in every step)
+- Dispatches sub-agents with **accountability-weighted** prompts
+- Uses **ASI loop** when fixing batch issues (one fix at a time, re-scan between each)
+- Verifies file integrity with **SHA-256 hashing** for security-critical work
+- Reviews **spec compliance then code quality** between tasks
+- Never claims completion without **fresh verification evidence**
+
 ## Project Structure
 
 ```text
@@ -136,7 +146,9 @@ superpowers-enhanced/
 ├── opencode-template.json    # OpenCode config template
 ├── install.sh                # One-liner installer (Linux / macOS / WSL)
 ├── install.ps1               # One-liner installer (Windows PowerShell)
-├── setup.mjs                 # Cross-platform installer script
+├── setup.mjs                 # Cross-platform installer
+├── uninstall.sh              # One-liner uninstaller (Bash)
+├── uninstall.ps1             # One-liner uninstaller (PowerShell)
 ├── uninstall.mjs             # Cross-platform uninstaller
 ├── agent/
 │   └── zeus.md               # Orchestrator agent (default)
@@ -167,37 +179,32 @@ irm https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced/main/install.
 
 On re-run, the installer:
 
-- **Merges config** — only adds fields that are missing or different. If your `opencode.json` already has the right values, nothing changes.
-- **Overwrites files** — `AGENTS.md`, `zeus.md`, `scripts/verify-hash.sh`, skills, and prompts get the latest versions. Originals are backed up to `~/.config/opencode/.backups/<timestamp>/` before overwriting.
-- **Preserves everything else** — model/provider config, API keys, any extra files you placed in the skills or prompts directories.
+- **Merges config** — only adds fields that are missing or have changed. If your `opencode.json` already has the right values, nothing happens.
+- **Overwrites files** — AGENTS.md, zeus.md, verify-hash.sh, skills, and prompts get the latest versions. Originals are backed up first.
+- **Preserves everything else** — model/provider config, API keys, custom files you added to the skills or prompts directories.
 
 > [!TIP]
-> Run `node setup.mjs --dry-run` first to preview what would change without touching anything.
+> Run `node setup.mjs --dry-run` from a local clone to preview what would change.
 
-Restart OpenCode after updating for changes to take effect.
+Restart OpenCode after updating for the changes to take effect.
 
 ## Uninstall
 
-One-liner (no clone needed):
-
 ```bash
-# Linux / macOS / WSL
-bash <(curl -fsSL https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced/main/uninstall.sh)
+# One-liner (no clone needed)
+bash <(curl -fsSL https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced/main/uninstall.sh)        # Linux / macOS / WSL
+irm https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced/main/uninstall.ps1 | iex                # Windows
 
-# Windows (PowerShell)
-irm https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced/main/uninstall.ps1 | iex
+# Or from a local clone
+cd ~/superpowers-enhanced && node uninstall.mjs
 ```
 
-Or if you have the repo cloned:
-
-```bash
-cd ~/superpowers-enhanced
-node uninstall.mjs
-```
-
-The uninstaller reverts the `opencode.json` merge, removes copied files and directories, and restores your most recent backup. To fully remove the Superpowers plugin from OpenCode, also edit your `opencode.json` and remove the plugin entry.
+The uninstaller reverts the `opencode.json` merge, removes managed files and directories, and restores your most recent backup. To fully remove the Superpowers plugin, also edit your `opencode.json` and delete the plugin entry.
 
 ## Troubleshooting
+
+> [!NOTE]
+> All installer actions are **safe by default**. Existing files are backed up before any change. Run `node setup.mjs --dry-run` to preview.
 
 ### "Superpowers is not installed" error
 
@@ -210,11 +217,17 @@ The uninstaller reverts the `opencode.json` merge, removes copied files and dire
 
 ### Enhanced skills not auto-triggering
 
-1. Verify the files exist: `ls ~/.config/opencode/skills/superpowers-enhanced/`
-2. Check `skills.paths` in `opencode.json` contains `"skills/superpowers-enhanced"`
-3. Verify each skill has a valid `SKILL.md` with YAML frontmatter
-4. Restart OpenCode — skills are loaded at startup
+1. Verify files exist: `ls ~/.config/opencode/skills/superpowers-enhanced/`
+2. Check `skills.paths` in your `opencode.json` includes `"skills/superpowers-enhanced"`
+3. Each skill directory must contain a valid `SKILL.md` with YAML frontmatter (`name` and `description` fields)
+4. Restart OpenCode — skills are loaded at startup, not dynamically
 
 ### Agent jumps straight to implementation
 
-This means the Superpowers plugin or AGENTS.md is not being loaded. Check that the plugin is in your `opencode.json` plugin array, that `~/.config/opencode/AGENTS.md` exists, and that your config has `"instructions": ["AGENTS.md"]` set.
+The Superpowers plugin or AGENTS.md is not being loaded. Check:
+
+1. The plugin entry exists in your `opencode.json` plugin array
+2. `~/.config/opencode/AGENTS.md` exists and is readable
+3. Your config has `"instructions": ["AGENTS.md"]`
+4. `"enable_experimental_skills": true` is set (skills won't load without it)
+5. You restarted OpenCode after making changes
