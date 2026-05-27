@@ -1,3 +1,5 @@
+<a id="readme-top"></a>
+
 <div align="center">
 
 # Superpowers Enhanced
@@ -13,9 +15,18 @@
 
 </div>
 
-OpenCode agents default to implementation mode: you describe what you want, and they start writing code. This works for simple tasks, but for anything involving security, multiple files, or iterative refinement, it falls apart quickly.
+> OpenCode agents default to implementation mode: you describe what you want, they start writing code.  
+> Superpowers Enhanced gives your agent an **operating system** instead.
 
-Superpowers Enhanced gives your agent an **operating system**. Instead of jumping straight to code, it brainstorms designs, writes plans, dispatches sub-agents with TDD, runs hard-coded security triage on every task, and verifies before claiming completion — all gated by mandatory reviews.
+| | Default OpenCode | Superpowers Enhanced |
+|---|---|---|
+| Task approach | Jump straight to code | Brainstorm → plan → implement → review |
+| Security | Manual, if at all | Hard-coded triage on every file |
+| Batch fixes | Fix all at once, hope nothing breaks | ASI loop: one fix, re-scan, repeat |
+| Architecture | Single opinion | Triple-critique deliberation gate |
+| Sub-agents | No accountability framing | Consequence-weighted prompts |
+| Verification | "It should work" | Fresh evidence before claiming done |
+| Simple tasks | Full pipeline every time | Fast path: TDD directly, skip overhead |
 
 This is a **downstream configuration overlay** for [`obra/superpowers`](https://github.com/obra/superpowers). It doesn't fork or modify upstream — it adds custom skills, an orchestrator agent (Zeus), enhanced prompts, and process enforcement on top of the standard Superpowers plugin.
 
@@ -59,12 +70,16 @@ node -e "console.log(JSON.parse(require('fs').readFileSync(require('path').join(
 # Should output: zeus
 ```
 
+([back to top](#readme-top))
+
 ## Prerequisites
 
 - **OpenCode** installed (the config overlay requires it)
 - **Node.js 18+** (the installer can install it for you, or get it from [nodejs.org](https://nodejs.org/))
 
 Everything else — git, curl, wget, PowerShell — is detected and used if available but not required.
+
+([back to top](#readme-top))
 
 ## What's Included
 
@@ -83,6 +98,8 @@ The installer also adds the Superpowers plugin to your `opencode.json` and merge
 
 > [!TIP]
 > The installer backs up your original config to `~/.config/opencode/.backups/<timestamp>/` before any changes. See the [uninstall](#uninstall) section to revert.
+
+([back to top](#readme-top))
 
 ## Protocols
 
@@ -119,6 +136,8 @@ These six custom protocols augment Superpowers' standard skills. They enforce di
   finishing-a-development-branch → merge / PR / cleanup
 ```
 
+([back to top](#readme-top))
+
 ## How It Works
 
 When OpenCode starts with this configuration:
@@ -146,6 +165,8 @@ On the full pipeline:
 - Never claims completion without **fresh verification evidence**
 
 Use `@quick` to force fast path or `@full` to force full pipeline on any task.
+
+([back to top](#readme-top))
 
 ## Project Structure
 
@@ -177,6 +198,8 @@ superpowers-enhanced/
     └── social-accountability/
 ```
 
+([back to top](#readme-top))
+
 ## Updating
 
 Re-run the one-liner installer — it's designed to be idempotent:
@@ -199,6 +222,8 @@ On re-run, the installer:
 > Run `node setup.mjs --dry-run` from a local clone to preview what would change.
 
 Restart OpenCode after updating for the changes to take effect.
+
+([back to top](#readme-top))
 
 ## Uninstall
 
@@ -243,3 +268,5 @@ The Superpowers plugin or AGENTS.md is not being loaded. Check:
 3. Your config has `"instructions": ["AGENTS.md"]`
 4. `"enable_experimental_skills": true` is set (skills won't load without it)
 5. You restarted OpenCode after making changes
+
+([back to top](#readme-top))
