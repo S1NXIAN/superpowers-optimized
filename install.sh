@@ -225,7 +225,7 @@ echo ""
 info "Detected: ${OS} (${ARCH})"
 
 # Ensure temp dir exists early (needed by direct node install)
-TMPDIR="$(mktemp -d)"
+TMPDIR="$(mktemp -d)" || { fail "Failed to create temporary directory."; exit 1; }
 
 # Check for Node.js — install if missing
 if command -v node &>/dev/null; then

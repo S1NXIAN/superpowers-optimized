@@ -53,9 +53,11 @@ function Install-NodeJS {
         exit 1
     }
 
-    # Refresh PATH
-    $env:PATH = [System.Environment]::GetEnvironmentVariable("PATH", "Machine") + ";" +
-                [System.Environment]::GetEnvironmentVariable("PATH", "User")
+    # Refresh PATH: merge fresh machine/user PATH (from registry) with current session PATH
+    # Prepend so newly-installed tool directories take priority; duplicates are harmless
+    $freshPath = [System.Environment]::GetEnvironmentVariable("PATH", "Machine") + ";" +
+                 [System.Environment]::GetEnvironmentVariable("PATH", "User")
+    $env:PATH = "$freshPath;$env:PATH"
 
     if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
         Write-Fail "Node.js installation failed."
