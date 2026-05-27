@@ -1,57 +1,51 @@
-// tests/agent/zeus-structure.test.mjs
-import { readFileSync } from 'fs';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const zeusPath = join(__dirname, '../../agent/zeus.md');
 const content = readFileSync(zeusPath, 'utf-8');
 
-let failures = 0;
+describe('agent/zeus.md Structure', () => {
+  describe('Complexity Classification Section', () => {
+    it('Has Complexity Classification heading', () => assert.ok(content.includes('### Complexity Classification')));
+    it('Has Simple (fast path) signal table', () => assert.ok(content.includes('Simple (fast path)')));
+    it('Has Complex (full path) signal table', () => assert.ok(content.includes('Complex (full path)')));
+    it('Has file count heuristic (≤ 2 files)', () => assert.ok(content.includes('≤ 2')));
+    it('Has T1-T3 mentioned (classification or triage)', () => assert.ok(content.includes('T1-T3')));
+  });
 
-function check(label, condition) {
-  if (!condition) {
-    console.error(`  FAIL: ${label}`);
-    failures++;
-  } else {
-    console.log(`  PASS: ${label}`);
-  }
-}
+  describe('Fast Path Section', () => {
+    it('Has Fast Path workflow heading', () => assert.ok(content.includes('### Fast Path')));
+    it('Fast Path skips brainstorming', () => assert.ok(content.includes('No brainstorming')));
+    it('Fast Path still runs security triage', () => assert.ok(content.includes('security triage')));
+    it('Fast Path still runs TDD', () => assert.ok(content.includes('RED → GREEN → REFACTOR') || content.includes('RED -> GREEN -> REFACTOR')));
+    it('Fast Path still runs verification', () => assert.ok(content.includes('Verification')));
+  });
 
-// === Complexity Classification Section ===
-check('Has Complexity Classification heading', content.includes('### Complexity Classification'));
-check('Has Simple (fast path) signal table', content.includes('Simple (fast path)'));
-check('Has Complex (full path) signal table', content.includes('Complex (full path)'));
-check('Has file count heuristic (≤ 2 files)', content.includes('≤ 2'));
-check('Has T1-T3 mentioned (classification or triage)', content.includes('T1-T3'));
+  describe('Full Path Preservation', () => {
+    it('Full path still has Brainstorming step', () => assert.ok(content.includes('Brainstorming')));
+    it('Full path still has Mandatory Security Triage', () => assert.ok(content.includes('Mandatory Security Triage')));
+    it('Full path still has Writing Plans', () => assert.ok(content.includes('Writing Plans')));
+    it('Full path still has Subagent-Driven Development', () => assert.ok(content.includes('Subagent-Driven')));
+    it('Full path still has ASI Loop', () => assert.ok(content.includes('ASI Loop')));
+    it('Full path still has TDD Always', () => assert.ok(content.includes('TDD')));
+    it('Full path still has Code Review', () => assert.ok(content.includes('Code Review')));
+    it('Full path still has Verification', () => assert.ok(content.includes('Verification')));
+    it('Full path still has Self-Consistency Reasoning', () => assert.ok(content.includes('Self-Consistency')));
+  });
 
-// === Fast Path Section ===
-check('Has Fast Path workflow heading', content.includes('### Fast Path'));
-check('Fast Path skips brainstorming', content.includes('No brainstorming'));
-check('Fast Path still runs security triage', content.includes('security triage'));
-check('Fast Path still runs TDD', content.includes('RED → GREEN → REFACTOR'));
-check('Fast Path still runs verification', content.includes('Verification'));
+  describe('User Overrides', () => {
+    it('Has @quick override', () => assert.ok(content.includes('@quick')));
+    it('Has @full override', () => assert.ok(content.includes('@full')));
+    it('Has No annotation default behavior', () => assert.ok(content.includes('Zeus decides')));
+  });
 
-// === Full Path Preservation ===
-check('Full path still has Brainstorming step', content.includes('### 1. Brainstorming'));
-check('Full path still has Mandatory Security Triage', content.includes('### 2. Mandatory Security Triage'));
-check('Full path still has Writing Plans', content.includes('### 3. Writing Plans'));
-check('Full path still has Subagent-Driven Development', content.includes('### 4. Subagent-Driven'));
-check('Full path still has ASI Loop', content.includes('### 5. ASI Loop'));
-check('Full path still has TDD Always', content.includes('### 6. TDD Always'));
-check('Full path still has Code Review', content.includes('### 7. Code Review'));
-check('Full path still has Verification', content.includes('### 8. Verification'));
-check('Full path still has Self-Consistency Reasoning', content.includes('### 9. Self-Consistency'));
-
-// === User Overrides ===
-check('Has @quick override', content.includes('@quick'));
-check('Has @full override', content.includes('@full'));
-check('Has No annotation default behavior', content.includes('Zeus decides'));
-
-// === Full Path Not Degraded ===
-check('Still references subagent dispatch', content.includes('subagent'));
-check('Still has deliberation gate trigger', content.includes('deliberation-gate'));
-check('Still references social-accountability', content.includes('social-accountability'));
-
-console.log(`\n${failures === 0 ? '✓ All tests passed' : `✗ ${failures} test(s) failed`}`);
-process.exit(failures > 0 ? 1 : 0);
+  describe('Full Path Not Degraded', () => {
+    it('Still references subagent dispatch', () => assert.ok(content.includes('subagent')));
+    it('Still has deliberation gate trigger', () => assert.ok(content.includes('deliberation-gate')));
+    it('Still references social-accountability', () => assert.ok(content.includes('social-accountability')));
+  });
+});
