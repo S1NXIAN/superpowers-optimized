@@ -1,28 +1,30 @@
 <a id="readme-top"></a>
 
 <div align="center">
-  
-  # ⚡ Superpowers Enhanced
-  *A high-discipline operating system and quality pipeline for OpenCode*
 
-  [![Node version](https://img.shields.io/badge/Node.js-%3E%3D18-339933?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-  [![Install - Bash](https://img.shields.io/badge/Bash-4EAA25?style=flat-square&logo=gnubash&logoColor=white)](install.sh)
-  [![Install - PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=flat-square&logo=powershell&logoColor=white)](install.ps1)
-  [![License - MIT](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
+# ⚡ Superpowers Enhanced
+*A high-discipline engineering pipeline and quality gate overlay for OpenCode*
 
-  ⭐ If you find this configuration helpful, star the repository!
+[![Node version](https://img.shields.io/badge/Node.js-%3E%3D18-339933?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Install - Bash](https://img.shields.io/badge/Bash-4EAA25?style=flat-square&logo=gnubash&logoColor=white)](install.sh)
+[![Install - PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=flat-square&logo=powershell&logoColor=white)](install.ps1)
+[![License - MIT](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
-  [Features](#features) • [Quick Start](#quick-start) • [Quality Gates](#the-six-quality-gates) • [Complexity Routing](#complexity-aware-routing) • [Troubleshooting](#troubleshooting)
+⭐ If you find this configuration helpful, star the repository!
+
+[Features](#features) • [Quick Start](#quick-start) • [How it Works](#how-it-works) • [The Six Quality Gates](#the-six-quality-gates) • [Troubleshooting](#troubleshooting)
 
 </div>
 
 ---
 
-OpenCode agents default to an **implementation-first** mode: describe what you want, and they immediately begin writing code. While fast, this ad-hoc approach often leads to regressive bugs, missed security boundaries, and architectural debt.
+OpenCode agents default to an implementation-first mode: describe what you want, and they immediately begin writing code. While fast, this ad-hoc approach often leads to regressive bugs, missed security boundaries, and architectural debt.
 
-**Superpowers Enhanced** acts as a structured operating system overlay on top of [`obra/superpowers`](https://github.com/obra/superpowers). It wraps your OpenCode environment in a strict engineering pipeline—enforcing design, security auditing, multi-perspective reviews, and automated verification.
+**Superpowers Enhanced** acts as a structured quality gate overlay on top of OpenCode. It wraps your agentic environment in a strict engineering pipeline—enforcing design, security auditing, multi-perspective reviews, and automated verification.
 
-| Workflow Gate | Default OpenCode | Superpowers Enhanced |
+### Value Proposition
+
+| Task | Default OpenCode | Superpowers Enhanced |
 | :--- | :--- | :--- |
 | **Task Initiation** | Jump straight to implementation | **Brainstorm** intent, propose approaches, design first |
 | **Security Auditing** | Manual oversight or post-factum scans | **Hard-coded triage** triggered automatically on file paths/content |
@@ -80,18 +82,48 @@ node setup.mjs --dry-run  # Preview config and file changes only
 > [!IMPORTANT]
 > You must completely restart the OpenCode application/daemon after installation for the changes and skills to load.
 
-### Verifying the Installation
+### Verification Checklist
 
-To confirm that the orchestrator and instruction paths are successfully registered:
+To verify that the configuration and default agent are correctly registered:
+- Verify that the agent configuration files exist in your home configuration directory:
+  ```bash
+  ls ~/.config/opencode/AGENTS.md
+  ls ~/.config/opencode/agent/zeus.md
+  ```
+- Verify that the default agent is set to `zeus` in the configuration file:
+  ```bash
+  node -e "console.log(JSON.parse(require('fs').readFileSync(require('path').join(require('os').homedir(),'.config','opencode','opencode.json'),'utf8')).default_agent)"
+  ```
+  Expected Output: `zeus`
 
-```bash
-# Verify agent configuration files exist
-ls ~/.config/opencode/AGENTS.md ~/.config/opencode/agent/zeus.md
+---
 
-# Verify default agent is set to Zeus
-node -e "console.log(JSON.parse(require('fs').readFileSync(require('path').join(require('os').homedir(),'.config','opencode','opencode.json'),'utf8')).default_agent)"
-# Expected Output: zeus
+## How it Works
+
+The **Zeus Orchestrator** (`agent/zeus.md`) manages the development loop. It automatically classifies incoming requests to select the most token-efficient route:
+
+```mermaid
+graph TD
+    A[User Request] --> B{Complexity Check}
+    B -- Simple --> C[Fast Path<br>TDD Directly]
+    B -- Complex --> D[Full Path<br>Brainstorm ➔ Plan ➔ Review]
 ```
+
+### Classification Heuristics
+
+| Attribute | Simple (Fast Path) | Complex (Full Path) |
+| :--- | :--- | :--- |
+| **Files Touched** | ≤ 2 files | ≥ 3 files or new subsystem |
+| **Keywords** | *fix, typo, rename, update, bump, refactor* | *implement, add, create, design, architect* |
+| **Security Triggers** | No T1-T3 matches | **Any** T1-T3 match (Forces full path) |
+| **Scope** | Single localized concern | New capability, integration, cross-cutting |
+| **Manual Override** | Prefix request with `@quick` | Prefix request with `@full` |
+
+### Manual Overrides
+
+You can explicitly bypass the heuristic routing at any time:
+- **`@quick`**: Forces the fast path—ideal for quick refactors, typo fixes, and styling updates.
+- **`@full`**: Forces the complete, audited Superpowers pipeline—recommended when adding crucial features.
 
 ---
 
@@ -127,76 +159,49 @@ Superpowers Enhanced integrates six key protocols directly into the agentic loop
 ```
 
 ### 🛡️ Security Triage (`skills/security-triage/`)
-A hard-coded trigger system that intercepts requests touching sensitive files or patterns.
-- **T1 Paths**: Matches file patterns like `*auth*/**`, `*secret*/**`, `*token*/**`, `*.pem`, `*rbac*/**`.
-- **T2 Code**: Scans file modifications for terms such as `def authenticate*`, `SECRET_KEY`, `eval(`, `os.system`.
-- **T3 Directories**: Automatically flags files residing in `auth/`, `crypto/`, `secrets/`, `middleware/auth*/`.
-- **Action**: Bypasses LLM judgment, halts the workflow, flags the task as `[SECURITY-TRIAGE]`, and triggers a mandatory 4-point security audit.
+
+> [!IMPORTANT]
+> The security triage gate operates on a zero-trust model. If any trigger matches, execution halts immediately and flags the task as `[SECURITY-TRIAGE]` to enforce a mandatory 4-point security audit checklist.
+
+- **T1 Paths**: Matches file patterns like `*auth*/**`, `*login*/**`, `*session*/**`, `*secret*/**`, `*token*/**`, `*.pem`, `*.key`.
+- **T2 Code**: Scans file modifications for terms such as `def authenticate*`, `SECRET_KEY`, `eval(`, `os.system`, `subprocess.*`.
+- **T3 Directories**: Automatically flags files residing in `auth/`, `security/`, `crypto/`, `secrets/`, `middleware/auth*/`.
 
 ### ⚖️ Deliberation Gate (`skills/deliberation-gate/`)
-Triggered automatically before architecting tier-3 tasks (4+ files, new subsystems, or cross-cutting changes).
-- **The Skeptic**: Audits where the design will fail at scale, identifying race conditions and bottleneck vulnerabilities.
-- **The Minimalist**: Evaluates how the goal can be met using existing utilities, without adding dependencies or creating files.
-- **The Maintainer**: Projects long-term technical debt, testing complexities, and future developer comprehension.
+
+Triggered automatically before architecting tier-3 tasks (4+ files, new subsystems, or cross-cutting changes). It spawns three stakeholder roles for audit:
+- **Skeptic**: Focuses on why the design will fail at scale (concurrency, bottlenecks, race conditions).
+- **Minimalist**: Focuses on how to achieve the goal using existing utilities without adding new dependencies or files.
+- **Maintainer**: Focuses on long-term technical debt, testability, and future developer comprehension.
 - **Action**: Collects exactly one un-debated critique per role and synthesizes a revised design document for user approval.
 
 ### 🤝 Social Accountability (`skills/social-accountability/`)
-Injects consequence-weighted framing into sub-agent prompts. Empirical data shows LLMs allocate more cognitive resources and experience lower hallucination rates when failure modes are defined.
-- **Implementers**: Warned that introducing bugs or omitting test coverage wastes pipeline compute and erodes accuracy scores.
-- **Spec Reviewers**: Instructed that false positives waste engineering hours, while missed requirements cost 10x more to patch later.
-- **Code Reviewers**: Reminded they are the last gate before production—technical debt from structural approvals compounds exponentially.
+
+Injects consequence-weighted framing into sub-agent prompts. LLMs experience lower hallucination rates and allocate more cognitive resources when failure modes are defined:
+- **Implementer**: Warned that code accuracy controls downstream pipeline compute; missed test cases erode trust scores.
+- **Spec Reviewer**: Reminded that false positives waste engineering hours, while missed requirements cost 10x more to patch later.
+- **Code Reviewer**: Reminded they are the last gate before production—technical debt from structural approvals compounds exponentially.
 
 ### 🔁 ASI Loop (`skills/asi-loop/`)
-An Actionable Side Information protocol for batch bug fixes and audit findings.
-- **Isolation**: Strictly isolates and resolves exactly **one** issue per cycle.
-- **Verification**: Fixes the issue using TDD (RED-GREEN-REFACTOR), then runs tests and scans *only* on the affected files.
-- **Re-Scan**: Dynamically updates the issue backlog and re-checks for structural side-effects before selecting the next issue.
-- **Infinite Loop Guard**: Automatically halts after 4 cycles to preserve the active diff state and present a diagnostic report to the user.
+
+An Actionable Side Information protocol for batch bug fixes and audit findings:
+- **Isolate and Fix**: Strictly isolates and resolves exactly **one** issue per cycle.
+- **TDD & Verify**: Fixes the issue using TDD, then runs tests and scans *only* on the affected files.
+- **Re-Scan**: Dynamically updates the issue backlog and re-checks for structural side-effects.
+- **Halt Guard**: Automatically halts after 4 cycles to preserve the active diff state and present a diagnostic report to the user.
 
 ### 🔑 Ephemeral Hashing (`scripts/verify-hash.sh`)
-An anti-TOCTOU (Time-of-Check to Time-of-Use) cryptographic shield.
+
+An anti-TOCTOU (Time-of-Check to Time-of-Use) cryptographic shield:
 - **Capture**: Automatically generates a SHA-256 hash of a file immediately after a sub-agent writes or modifies it.
 - **Verification**: Recalculates and verifies the hash right before test execution or deployment.
 - **Response**: Instantly terminates the pipeline and alerts the user if the hash has mutated, neutralizing code-swapping exploits.
 
 ### 🎯 Self-Consistency Reasoning
-Forces multi-path validation during debugging and verification to prevent confident-but-wrong single-chain failures.
-- **During Debugging**: Generates 3-5 independent root-cause explanations using different logical tracks. If fewer than 60% of paths agree, it halts to gather further diagnostic evidence.
+
+Forces multi-path validation during debugging and verification to prevent confident-but-wrong single-chain failures:
+- **During Debugging**: Generates 3-5 independent root-cause explanations using different tracks (e.g. data flow, environment). Proceeds only if ≥60% agree.
 - **During Verification**: Generates 2-3 distinct, multi-angle tests (e.g., negative boundaries, side-effect audits) before declaring a task complete.
-
----
-
-## Complexity-Aware Routing
-
-The **Zeus Orchestrator** (`agent/zeus.md`) manages the development loop. It automatically classifies incoming requests to select the most token-efficient route:
-
-```text
-             User Request
-                  │
-                  ▼
-         [Complexity Check]
-          /              \
-    (Simple)           (Complex)
-      /                    \
-  Fast Path              Full Path
- TDD Directly      Brainstorm → Plan → Review
-```
-
-### Classification Heuristics
-
-| Attribute | Simple (Fast Path) | Complex (Full Path) |
-|:---|:---|:---|
-| **Files Touched** | $\le 2$ files | $\ge 3$ files or new subsystem |
-| **Keywords** | *fix, typo, rename, update, bump, refactor* | *implement, add, create, design, architect* |
-| **Security Triggers** | No T1-T3 matches | **Any** T1-T3 match (Forces full path) |
-| **Scope** | Single localized concern | New capability, integration, cross-cutting |
-| **Manual Override** | Prefix request with `@quick` | Prefix request with `@full` |
-
-### Manual Overrides
-
-You can explicitly bypass the heuristic routing at any time:
-- **`@quick`**: Forces the fast path—ideal for quick refactors, typo fixes, and styling updates.
-- **`@full`**: Forces the complete, audited Superpowers pipeline—recommended when adding crucial features.
 
 ---
 
@@ -213,7 +218,7 @@ superpowers-enhanced/
 ├── uninstall.ps1             # Windows uninstallation cleanup script
 ├── uninstall.mjs             # Cross-platform configuration restorer
 ├── agent/
-│   └── zeus.md               # Adaptive Zeus Orchestrator (default agent)
+│   └── zeus.md               # Zeus Orchestrator (default agent)
 ├── prompts/
 │   ├── implementer.md        # Consequence-weighted sub-agent implementer template
 │   ├── spec-reviewer.md     # Consequence-weighted sub-agent spec reviewer template
@@ -239,16 +244,17 @@ superpowers-enhanced/
 > [!WARNING]
 > OpenCode versions 1.15.10+ reject unrecognized top-level keys like `enable_experimental_skills`.
 
-If you experience crashes immediately on startup, check your global `~/.config/opencode/opencode.json` file. Ensure that:
-1. No vestigial config fields (like `enable_experimental_skills`) are present.
-2. The `model` field is set to a valid, resolvable model ID (such as `"opencode/deepseek-v4-flash-free"` or `"google/gemini-3-flash-preview"`).
+If you experience crashes immediately on startup:
+1. Open your global `~/.config/opencode/opencode.json` file.
+2. Remove any unrecognized fields (like `enable_experimental_skills`).
+3. Verify that the `model` field is set to a valid, resolvable model ID (such as `"opencode/deepseek-v4-flash-free"` or `"google/gemini-3-flash-preview"`).
 
 ### Skills or Agents Not Loading
 
-1. Verify that `skills.paths` in your global `opencode.json` contains `"skills/superpowers-enhanced"`.
-2. Verify that the files exist at `~/.config/opencode/skills/superpowers-enhanced/`.
+1. Verify that `skills.paths` in your global `opencode.json` contains the path to the skills directory (typically `"skills/superpowers-enhanced"` or absolute path to the skills folder).
+2. Verify that the skill files actually exist at that location.
 3. Check that the `instructions` array contains `"AGENTS.md"`.
-4. **Restart OpenCode**—skills, agents, and instructions are loaded into memory *only* during boot.
+4. Restart the OpenCode application/daemon—skills, agents, and instructions are loaded into memory *only* during boot.
 
 ### Uninstalling
 
@@ -260,6 +266,11 @@ bash <(curl -fsSL https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced
 
 # Windows (PowerShell)
 irm https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced/main/uninstall.ps1 | iex
+```
+
+Local/manual cleanup:
+```bash
+node uninstall.mjs
 ```
 
 ([back to top](#readme-top))
