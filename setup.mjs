@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync, copyFileSync, mkdirSync, existsSync, rmSync, readdirSync, statSync, chmodSync } from 'fs';
+import { readFileSync, writeFileSync, copyFileSync, mkdirSync, existsSync, rmSync, readdirSync, statSync, chmodSync, lstatSync, unlinkSync } from 'fs';
 import { join, dirname, sep } from 'path';
 import { homedir } from 'os';
 import { fileURLToPath } from 'url';
@@ -163,6 +163,17 @@ function copyFile(src, dest, { executable = false, dryRun = false } = {}) {
     if (!dryRun) mkdirSync(dirname(dest), { recursive: true });
   }
   if (!dryRun) {
+    // If dest is a symlink (e.g. from a previous install method),
+    // remove it first so copyFileSync creates a regular file instead
+    // of writing through the symlink to a stale target.
+    try {
+      if (lstatSync(dest).isSymbolicLink()) {
+        unlinkSync(dest);
+        outSubdued(`Replaced symlink with regular file: ${dest.replace(CONFIG_DIR + sep, '')}`);
+      }
+    } catch {
+      // lstatSync throws on ENOENT — dest doesn't exist, that's fine
+    }
     copyFileSync(src, dest);
     if (executable && process.platform !== 'win32') {
       chmodSync(dest, 0o755);
@@ -230,6 +241,22 @@ function preflight() {
     outOk('git is available');
   } else {
     outWarn('git not found \u2014 diff display will be limited');
+  }
+
+  checkSymlinks();
+}
+
+function checkSymlinks() {
+  for (const fc of FILE_COPIES) {
+    const configRel = fc.configRel;
+    const dest = join(CONFIG_DIR, configRel);
+    try {
+      if (lstatSync(dest).isSymbolicLink()) {
+        outWarn(`Symlink detected: ${configRel} will be replaced with a regular file`);
+      }
+    } catch {
+      // dest doesn't exist — no problem
+    }
   }
 }
 
