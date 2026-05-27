@@ -94,7 +94,7 @@ Everything else — git, curl, wget, PowerShell — is detected and used if avai
 | **Prompts** (`prompts/`) | Pre-framed templates for implementer, spec reviewer, and code quality reviewer. Each includes role-specific accountability framing. |
 | **Ephemeral hashing** (`scripts/verify-hash.sh`) | SHA-256 verification to prevent TOCTOU exploits on security-critical patches. |
 
-The installer also adds the Superpowers plugin to your `opencode.json` and merges the fields `default_agent`, `instructions`, `skills.paths`, `enable_experimental_skills`, and `autoupdate`. Everything else in your existing config — models, provider settings, API keys — is preserved.
+The installer also adds the Superpowers plugin to your `opencode.json` and merges the fields `default_agent`, `instructions`, `skills.paths`, and `autoupdate`. Everything else in your existing config — models, provider settings, API keys — is preserved.
 
 > [!TIP]
 > The installer backs up your original config to `~/.config/opencode/.backups/<timestamp>/` before any changes. See the [uninstall](#uninstall) section to revert.
@@ -266,7 +266,6 @@ The Superpowers plugin or AGENTS.md is not being loaded. Check:
 1. The plugin entry exists in your `opencode.json` plugin array
 2. `~/.config/opencode/AGENTS.md` exists and is readable
 3. Your config has `"instructions": ["AGENTS.md"]`
-4. `"enable_experimental_skills": true` is set (skills won't load without it)
-5. You restarted OpenCode after making changes
+4. You restarted OpenCode after making changes
 
 ([back to top](#readme-top))

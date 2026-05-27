@@ -141,10 +141,6 @@ function planJsonRevert(config) {
     changes.push({ field: 'skills.paths', before: [...skillsPaths], after: newPaths.length > 0 ? newPaths : undefined });
   }
 
-  if (config.enable_experimental_skills === true) {
-    changes.push({ field: 'enable_experimental_skills', before: true, after: undefined });
-  }
-
   if (config.autoupdate === false) {
     changes.push({ field: 'autoupdate', before: false, after: undefined });
   }
@@ -309,9 +305,6 @@ function revertConfig(configChanges) {
           config.skills.paths = change.after;
         }
         break;
-      case 'enable_experimental_skills':
-        delete config.enable_experimental_skills;
-        break;
       case 'autoupdate':
         delete config.autoupdate;
         break;
@@ -448,13 +441,6 @@ function verify(restoredPaths = []) {
       verifyFailed = true;
     } else {
       outOk('skills/superpowers-enhanced removed from skills.paths');
-    }
-
-    if (config.enable_experimental_skills === true) {
-      outError('enable_experimental_skills still true');
-      verifyFailed = true;
-    } else {
-      outOk('enable_experimental_skills removed');
     }
 
     if (config.autoupdate === false) {

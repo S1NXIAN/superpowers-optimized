@@ -56,7 +56,7 @@ function showHelp() {
   console.log('  --help        Show this help and exit\n');
   console.log(`${c(BOLD, 'What it does:')}`);
   console.log('  1. Validates that OpenCode is installed');
-  console.log('  2. Merges opencode.json config (plugin, default_agent, instructions, skills.paths,\n     enable_experimental_skills, autoupdate)');
+  console.log('  2. Merges opencode.json config (plugin, default_agent, instructions, skills.paths,\n     autoupdate)');
   console.log('  3. Shows planned changes before applying');
   console.log('  4. Backs up existing files to ~/.config/opencode/.backups/<timestamp>/');
   console.log('  5. Copies repo files into ~/.config/opencode/');
@@ -285,10 +285,6 @@ function planJsonMerge(existingConfig) {
     changes.push({ field: 'skills.paths', before: beforePaths, after: afterPaths });
   }
 
-  if (existingConfig.enable_experimental_skills !== true) {
-    changes.push({ field: 'enable_experimental_skills', before: existingConfig.enable_experimental_skills, after: true });
-  }
-
   if (existingConfig.autoupdate !== false) {
     changes.push({ field: 'autoupdate', before: existingConfig.autoupdate, after: false });
   }
@@ -423,9 +419,6 @@ function installConfig(configChanges) {
         if (!config.skills) config.skills = {};
         config.skills.paths = change.after;
         break;
-      case 'enable_experimental_skills':
-        config.enable_experimental_skills = change.after;
-        break;
       case 'autoupdate':
         config.autoupdate = change.after;
         break;
@@ -493,13 +486,6 @@ function verify() {
       outOk('skills.paths includes skills/superpowers-enhanced');
     } else {
       outError('skills.paths missing skills/superpowers-enhanced');
-      verifyFailed = true;
-    }
-
-    if (config.enable_experimental_skills === true) {
-      outOk('enable_experimental_skills is true');
-    } else {
-      outError('enable_experimental_skills is not true — skills will not load');
       verifyFailed = true;
     }
 
