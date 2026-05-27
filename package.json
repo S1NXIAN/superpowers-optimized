@@ -8,8 +8,8 @@
     "test:unit": "node --test tests/lib/*.test.mjs",
     "test:integration": "node --test tests/integration/*.test.mjs",
     "test:agent": "node --test tests/agent/*.test.mjs",
-    "setup": "node setup.mjs",
-    "uninstall": "node uninstall.mjs"
+    "setup": "node bin/setup.mjs",
+    "uninstall": "node bin/uninstall.mjs"
   },
   "engines": {
     "node": ">=18"
