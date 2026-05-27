@@ -215,10 +215,10 @@ opencode-zeus/
 ├── installers/
 │   ├── install.sh                # Unix installation entrypoint
 │   ├── install.ps1               # Windows PowerShell installation entrypoint
-├── bin/
-│   ├── setup.mjs                 # Cross-platform JSON-merge configuration setup
 │   ├── uninstall.sh              # Unix uninstallation cleanup script
 │   └── uninstall.ps1             # Windows uninstallation cleanup script
+├── bin/
+│   ├── setup.mjs                 # Cross-platform JSON-merge configuration setup
 │   └── uninstall.mjs             # Cross-platform configuration restorer
 ├── agent/
 │   └── zeus.md               # Zeus Orchestrator (default agent)
