@@ -1,5 +1,5 @@
 # ===========================================================================
-# Superpowers Enhanced — one-liner installer (Windows PowerShell)
+# opencode-zeus — one-liner installer (Windows PowerShell)
 #
 # Usage:
 #   irm https://raw.githubusercontent.com/S1NXIAN/opencode-zeus/main/install.ps1 | iex
@@ -7,7 +7,7 @@
 # What it does:
 #   1. Checks for Node.js (installs via winget/choco/scoop if missing)
 #   2. Downloads the repo as a zip
-#   3. Runs setup.mjs --force
+#   3. Runs bin/setup.mjs --force
 #   4. Cleans up
 # ===========================================================================
 
@@ -90,7 +90,7 @@ function Assert-NodeVersion {
 # ---------------------------------------------------------------------------
 # Preflight
 # ---------------------------------------------------------------------------
-Write-Header "Superpowers Enhanced — quick installer"
+Write-Header "opencode-zeus — quick installer"
 Write-Host ""
 
 if (Get-Command node -ErrorAction SilentlyContinue) {
@@ -108,7 +108,7 @@ Assert-NodeVersion
 # ---------------------------------------------------------------------------
 Write-Header "Downloading"
 
-$TmpDir = Join-Path $env:TEMP "superpowers-install-$(Get-Date -Format 'yyyyMMddHHmmss')"
+$TmpDir = Join-Path $env:TEMP "opencode-zeus-install-$(Get-Date -Format 'yyyyMMddHHmmss')"
 New-Item -ItemType Directory -Path $TmpDir -Force | Out-Null
 
 $ZipPath = Join-Path $TmpDir "repo.zip"
@@ -120,12 +120,12 @@ Write-Ok "Downloaded zip"
 Expand-Archive -Path $ZipPath -DestinationPath $TmpDir -Force
 $Extracted = Join-Path $TmpDir "opencode-zeus-$Branch"
 
-if (-not (Test-Path (Join-Path $Extracted "setup.mjs"))) {
+if (-not (Test-Path (Join-Path $Extracted "bin/setup.mjs"))) {
     # Fallback: find extracted directory
-    $Extracted = Get-ChildItem -Path $TmpDir -Directory | Where-Object { $_.Name -like "superpowers*" } | Select-Object -First 1 -ExpandProperty FullName
+    $Extracted = Get-ChildItem -Path $TmpDir -Directory | Where-Object { $_.Name -like "opencode-zeus*" } | Select-Object -First 1 -ExpandProperty FullName
 }
 
-if (-not (Test-Path (Join-Path $Extracted "setup.mjs"))) {
+if (-not (Test-Path (Join-Path $Extracted "bin/setup.mjs"))) {
     Write-Fail "setup.mjs not found in downloaded archive."
     exit 1
 }
@@ -136,7 +136,7 @@ Write-Ok "Extracted to temp directory"
 # Run setup
 # ---------------------------------------------------------------------------
 try {
-    node (Join-Path $Extracted "setup.mjs") --force
+    node (Join-Path $Extracted "bin/setup.mjs") --force
 }
 finally {
     # Cleanup temp directory even if install fails
@@ -146,4 +146,4 @@ finally {
 }
 
 Write-Host ""
-Write-Ok "Done! Restart OpenCode to activate Superpowers."
+Write-Ok "Done! Restart OpenCode to activate opencode-zeus."

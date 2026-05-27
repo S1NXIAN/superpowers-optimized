@@ -1,5 +1,5 @@
 # ===========================================================================
-# Superpowers Enhanced — one-liner uninstaller (PowerShell)
+# opencode-zeus — one-liner uninstaller (PowerShell)
 #
 # Usage:
 #   irm https://raw.githubusercontent.com/S1NXIAN/opencode-zeus/main/uninstall.ps1 | iex
@@ -7,7 +7,7 @@
 # What it does:
 #   1. Checks Node.js is available
 #   2. Downloads the repo as a zip
-#   3. Runs uninstall.mjs --force
+#   3. Runs bin/uninstall.mjs --force
 #   4. Cleans up
 # ===========================================================================
 
@@ -29,7 +29,7 @@ function Write-Header { param($Msg) Write-Host "`n$Msg" -ForegroundColor White -
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
-Write-Header "Superpowers Enhanced — quick uninstaller"
+Write-Header "opencode-zeus — quick uninstaller"
 Write-Host ""
 
 if (Get-Command node -ErrorAction SilentlyContinue) {
@@ -41,7 +41,7 @@ else {
 }
 
 # Create temp directory
-$TmpDir = Join-Path $env:TEMP "superpowers-uninstall-$(Get-Date -Format 'yyyyMMddHHmmss')"
+$TmpDir = Join-Path $env:TEMP "opencode-zeus-uninstall-$(Get-Date -Format 'yyyyMMddHHmmss')"
 
 try {
     New-Item -ItemType Directory -Path $TmpDir -Force | Out-Null
@@ -56,10 +56,10 @@ try {
     # Extract
     Expand-Archive -Path $ZipPath -DestinationPath $TmpDir -Force
     $Extracted = Join-Path $TmpDir "opencode-zeus-$Branch"
-    if (-not (Test-Path (Join-Path $Extracted "uninstall.mjs"))) {
-        $Extracted = Get-ChildItem -Path $TmpDir -Directory | Where-Object { $_.Name -like "superpowers*" } | Select-Object -First 1 -ExpandProperty FullName
+    if (-not (Test-Path (Join-Path $Extracted "bin/uninstall.mjs"))) {
+        $Extracted = Get-ChildItem -Path $TmpDir -Directory | Where-Object { $_.Name -like "opencode-zeus*" } | Select-Object -First 1 -ExpandProperty FullName
     }
-    if (-not (Test-Path (Join-Path $Extracted "uninstall.mjs"))) {
+    if (-not (Test-Path (Join-Path $Extracted "bin/uninstall.mjs"))) {
         Write-Fail "uninstall.mjs not found in downloaded archive."
         exit 1
     }
@@ -68,7 +68,7 @@ try {
     # Run uninstall
     Write-Header "Uninstalling"
     Write-Host ""
-    node (Join-Path $Extracted "uninstall.mjs") --force
+    node (Join-Path $Extracted "bin/uninstall.mjs") --force
 }
 finally {
     # Cleanup temp directory even if uninstall fails

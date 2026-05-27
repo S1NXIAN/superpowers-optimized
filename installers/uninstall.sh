@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ===========================================================================
-# Superpowers Enhanced — one-liner uninstaller (Bash)
+# opencode-zeus — one-liner uninstaller (Bash)
 #
 # Usage:
 #   bash <(curl -fsSL https://raw.githubusercontent.com/S1NXIAN/opencode-zeus/main/uninstall.sh)
@@ -8,7 +8,7 @@
 # What it does:
 #   1. Checks Node.js is available
 #   2. Downloads the repo as a tarball (no git required)
-#   3. Runs uninstall.mjs --force
+#   3. Runs bin/uninstall.mjs --force
 #   4. Cleans up the temp directory
 # ===========================================================================
 
@@ -72,7 +72,7 @@ download_file() {
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
-header "Superpowers Enhanced — quick uninstaller"
+header "opencode-zeus — quick uninstaller"
 echo ""
 
 # Check Node.js
@@ -100,9 +100,9 @@ ok "Downloaded tarball"
 tar -xzf "$TARBALL" -C "$TMPDIR"
 EXTRACTED="${TMPDIR}/opencode-zeus-${BRANCH}"
 if [[ ! -d "$EXTRACTED" ]]; then
-  EXTRACTED="$(find "$TMPDIR" -mindepth 1 -maxdepth 1 -type d -name "superpowers*" | head -1)"
+  EXTRACTED="$(find "$TMPDIR" -mindepth 1 -maxdepth 1 -type d -name "opencode-zeus*" | head -1)"
 fi
-if [[ ! -f "${EXTRACTED}/uninstall.mjs" ]]; then
+if [[ ! -f "${EXTRACTED}/bin/uninstall.mjs" ]]; then
   fail "uninstall.mjs not found in downloaded archive."
   exit 1
 fi
@@ -111,7 +111,7 @@ ok "Extracted to temp directory"
 # Run uninstall
 header "Uninstalling"
 echo ""
-node "${EXTRACTED}/uninstall.mjs" --force
+node "${EXTRACTED}/bin/uninstall.mjs" --force
 
 echo ""
 ok "Uninstall complete."

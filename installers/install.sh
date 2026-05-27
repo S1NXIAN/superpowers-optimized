@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ===========================================================================
-# Superpowers Enhanced — one-liner installer
+# opencode-zeus — one-liner installer
 #
 # Usage:
 #   bash <(curl -fsSL https://raw.githubusercontent.com/S1NXIAN/opencode-zeus/main/install.sh)
@@ -8,7 +8,7 @@
 # What it does:
 #   1. Detects OS and installs Node.js if missing
 #   2. Downloads the repo as a tarball (no git required)
-#   3. Runs setup.mjs --force
+#   3. Runs bin/setup.mjs --force
 #   4. Cleans up the temp directory
 #
 # Supports: Linux (apt, dnf, yum, pacman, zypper, apk), macOS (brew),
@@ -237,7 +237,7 @@ check_node_version() {
 # ---------------------------------------------------------------------------
 # Preflight
 # ---------------------------------------------------------------------------
-header "Superpowers Enhanced — quick installer"
+header "opencode-zeus — quick installer"
 echo ""
 
 info "Detected: ${OS} (${ARCH})"
@@ -274,10 +274,10 @@ tar -xzf "$TARBALL" -C "$TMPDIR"
 EXTRACTED="${TMPDIR}/opencode-zeus-${BRANCH}"
 
 if [[ ! -d "$EXTRACTED" ]]; then
-  EXTRACTED="$(find "$TMPDIR" -mindepth 1 -maxdepth 1 -type d -name "superpowers*" | head -1)"
+  EXTRACTED="$(find "$TMPDIR" -mindepth 1 -maxdepth 1 -type d -name "opencode-zeus*" | head -1)"
 fi
 
-if [[ ! -f "${EXTRACTED}/setup.mjs" ]]; then
+if [[ ! -f "${EXTRACTED}/bin/setup.mjs" ]]; then
   fail "setup.mjs not found in downloaded archive."
   exit 1
 fi
@@ -290,7 +290,7 @@ ok "Extracted to temp directory"
 header "Installing"
 echo ""
 
-node "${EXTRACTED}/setup.mjs" --force
+node "${EXTRACTED}/bin/setup.mjs" --force
 
 echo ""
-ok "Done! Restart OpenCode to activate Superpowers."
+ok "Done! Restart OpenCode to activate opencode-zeus."
