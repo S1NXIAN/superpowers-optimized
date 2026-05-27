@@ -443,7 +443,7 @@ function verify() {
 
     const skillsPaths = config.skills?.paths || [];
     if (skillsPaths.includes(SKILLS_PATH)) {
-      outError('skills/paths still includes skills/superpowers-enhanced');
+      outError('skills.paths still includes skills/superpowers-enhanced');
       verifyFailed = true;
     } else {
       outOk('skills/superpowers-enhanced removed from skills.paths');

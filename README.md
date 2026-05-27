@@ -86,7 +86,7 @@ The installer also adds the Superpowers plugin to your `opencode.json` and merge
 
 ## Protocols
 
-These five custom protocols augment Superpowers' standard skills. They enforce discipline and security at specific gates in the development workflow:
+These six custom protocols augment Superpowers' standard skills. They enforce discipline and security at specific gates in the development workflow:
 
 | Gate | Protocol | What it prevents |
 |---|---|---|
@@ -95,6 +95,7 @@ These five custom protocols augment Superpowers' standard skills. They enforce d
 | During implementation | **Social accountability** | Sub-agents producing low-quality work without understanding consequences |
 | During batch fixes | **ASI loop** | Breaking one fix while applying another in overlapping code |
 | On security patches | **Ephemeral hashing** | TOCTOU exploits where a compromised agent swaps payloads between check and use |
+| During debugging and verification | **Self-consistency reasoning** | Confident-but-wrong single-chain failures; fixes based on incomplete root cause analysis |
 
 ### Integration flow
 
@@ -113,6 +114,7 @@ These five custom protocols augment Superpowers' standard skills. They enforce d
          ↓
     [ASI Loop] — when multiple issues found in overlapping code
     [Hash Verification] — for security-critical patches
+    [Self-Consistency] — multi-path validation during debugging & verification
          ↓
   finishing-a-development-branch → merge / PR / cleanup
 ```
