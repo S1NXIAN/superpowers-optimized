@@ -155,12 +155,24 @@ superpowers-enhanced/
 
 ## Uninstall
 
+One-liner (no clone needed):
+
+```bash
+# Linux / macOS / WSL
+bash <(curl -fsSL https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced/main/uninstall.sh)
+
+# Windows (PowerShell)
+irm https://raw.githubusercontent.com/S1NXIAN/superpowers-enhanced/main/uninstall.ps1 | iex
+```
+
+Or if you have the repo cloned:
+
 ```bash
 cd ~/superpowers-enhanced
 node uninstall.mjs
 ```
 
-This reverts the `opencode.json` merge, removes copied files and directories, and restores your most recent backup. To fully remove the Superpowers plugin from OpenCode, also edit your `opencode.json` and remove the plugin entry.
+The uninstaller reverts the `opencode.json` merge, removes copied files and directories, and restores your most recent backup. To fully remove the Superpowers plugin from OpenCode, also edit your `opencode.json` and remove the plugin entry.
 
 ## Troubleshooting
 
