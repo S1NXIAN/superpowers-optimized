@@ -23,6 +23,7 @@ describe('agent/zeus.md Structure', () => {
     it('Fast Path skips brainstorming', () => assert.ok(content.includes('No brainstorming')));
     it('Fast Path runs TDD', () => assert.ok(content.includes('TDD')));
     it('Fast Path runs self-consistency verification', () => assert.ok(content.includes('Self-consistency')));
+    it('Fast Path runs cleanup', () => assert.ok(content.includes('cleanup.mjs')));
   });
 
   describe('Full Path Workflow', () => {
@@ -33,6 +34,7 @@ describe('agent/zeus.md Structure', () => {
     it('Full path has ASI Loop', () => assert.ok(content.includes('ASI Loop')));
     it('Full path has Verification & Self-Consistency', () => assert.ok(content.includes('Verification & Self-Consistency')));
     it('Full path has Review & Merge', () => assert.ok(content.includes('Review & Merge')));
+    it('Full path has Cleanup stage', () => assert.ok(content.includes('Cleanup')));
   });
 
   describe('Skill References', () => {

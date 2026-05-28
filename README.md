@@ -64,8 +64,8 @@ The Zeus agent classifies each request automatically:
 
 | Classification | Trigger | What runs |
 |---|---|---|
-| **Fast Path** | `@quick`, or ≤2 files + fix/rename/update keywords + single concern | TDD → Verification |
-| **Full Path** | `@full`, or 4+ files, security trigger, new subsystem, cross-cutting | Brainstorming → Security Triage → Plans → Sub-Agents (with social-accountability framing) → ASI Loop (if overlapping fixes) → Review → Merge |
+| **Fast Path** | `@quick`, or ≤2 files + fix/rename/update keywords + single concern | TDD → Verification → Cleanup |
+| **Full Path** | `@full`, or 4+ files, security trigger, new subsystem, cross-cutting | Brainstorming → Security Triage → Plans → Sub-Agents (with social-accountability framing) → ASI Loop (if overlapping fixes) → Review → Merge → Cleanup |
 
 ### Manual Override
 
@@ -90,8 +90,9 @@ Full Path tasks execute the standard Superpowers pipeline with these stages:
 5. **ASI Loop** — If overlapping-code issues are found, fix one per cycle with reproducer-first TDD and file-backed state.
 6. **Verification & Self-Consistency** — Full test suite, side-effect checks, and 2-3 independent verification angles.
 7. **Review & Merge** — Final summary with verification evidence. User approval required before merge.
+8. **Cleanup** — `node bin/cleanup.mjs` removes AI-generated temp files (design docs, plans, state files).
 
-Fast Path skips directly to TDD (RED → GREEN → REFACTOR) followed by self-consistency verification.
+Fast Path skips directly to TDD (RED → GREEN → REFACTOR) followed by self-consistency verification and cleanup.
 
 ## Skills
 

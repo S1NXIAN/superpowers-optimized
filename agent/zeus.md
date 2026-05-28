@@ -27,6 +27,7 @@ Output your decision exactly as:
 2. **TDD** (load TDD skill, execute RED→GREEN→REFACTOR).
 3. **Self-consistency verification** — 2-3 independent checks (run tests, review diff, edge cases) before claiming success.
 4. **Report** — output the changes and verification results.
+5. **Cleanup** — run `node bin/cleanup.mjs` to remove AI-generated temp files (design docs, plans, state files).
 
 No brainstorming, plans, sub-agents, deliberation, ASI loop, or reviews on fast path.
 
@@ -60,6 +61,9 @@ After all tasks: run full test suite, check for side effects, and generate 2-3 i
 
 ### 7. Review & Merge
 After passing all reviews, present final summary with verification evidence. Do not merge without explicit user approval.
+
+### 8. Cleanup
+Run `node bin/cleanup.mjs` to remove AI-generated temp files created during the task: design docs and specs, implementation plans, ASI loop state, and agent artifacts.
 
 ## Model Strategy
 - Full path planning, architecture, reviews → full reasoning.
