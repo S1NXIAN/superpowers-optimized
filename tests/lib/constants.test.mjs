@@ -43,11 +43,11 @@ describe('lib/constants', () => {
     }
   });
 
-  it('includes lite-mode.md in FILE_COPIES with correct properties', () => {
-    const entry = FILE_COPIES.find(fc => fc.repoRel === 'lite-mode.md');
-    assert.ok(entry, 'lite-mode.md not found in FILE_COPIES');
-    assert.equal(entry.repoRel, 'lite-mode.md');
-    assert.equal(entry.configRel, 'lite-mode.md');
+  it('includes LITE.md in FILE_COPIES with correct properties', () => {
+    const entry = FILE_COPIES.find(fc => fc.repoRel === 'LITE.md');
+    assert.ok(entry, 'LITE.md not found in FILE_COPIES');
+    assert.equal(entry.repoRel, 'LITE.md');
+    assert.equal(entry.configRel, 'LITE.md');
     assert.equal(entry.executable, false);
   });
 

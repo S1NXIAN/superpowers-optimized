@@ -20,8 +20,7 @@ Enable in `~/.config/opencode/opencode.json`:
 
 ```json
 {
-  "instructions": ["AGENTS.md", "lite-mode.md"]
-}
+  "instructions": ["AGENTS.md", "LITE.md"]
 ```
 
-Disable by removing `"lite-mode.md"` from the `instructions` array.
+Disable by removing `"LITE.md"` from the `instructions` array.
