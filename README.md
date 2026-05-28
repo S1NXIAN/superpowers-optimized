@@ -23,6 +23,7 @@ opencode-zeus transforms a vanilla OpenCode AI coding assistant into a structure
 - **Multi-perspective architecture audits** — Deliberation Gate simulates Skeptic, Minimalist, and Maintainer roles before any tier-3 architecture work, with a confidence-weighted synthesis.
 - **Consequence-weighted sub-agents** — Social accountability framing injected as the first line of every sub-agent prompt. Templates for Implementer, Spec Reviewer, Code Quality Reviewer, and Security Reviewer.
 - **One-issue-at-a-time fix loop** — ASI Loop prevents regression cascades by fixing one overlapping-code issue per cycle with reproducer-first TDD and file-backed state.
+- **Lite mode** — Optional token-saving compression. Add `lite-mode.md` to the `instructions` array to enable caveman-mode AI responses. Remove it to disable.
 - **Zero dependencies** — Built with Node.js built-in modules only. No npm dependencies.
 
 ## Installation
@@ -110,6 +111,7 @@ Configuration files and scripts are also deployed:
 | `agent/zeus.md` | Zeus orchestrator agent definition — decision tree routing and full pipeline. |
 | `AGENTS.md` | Iron rules for Superpowers alignment (highest-priority system instructions). |
 | `scripts/verify-hash.sh` | Anti-TOCTOU SHA-256 hash verification for security-critical work. |
+| `lite-mode.md` | Optional instruction file — enables compressed caveman responses when added to `instructions` array. |
 | `bin/setup.mjs` | Cross-platform installer — copies files, merges config, backs up originals. |
 | `bin/uninstall.mjs` | Reverses setup — removes managed files and restores backups. |
 
@@ -136,6 +138,7 @@ The setup script merges these settings into your existing `~/.config/opencode/op
 ```
 ├── agent/
 │   └── zeus.md                   # Zeus orchestrator agent
+├── lite-mode.md                  # Optional token-saving compression mode
 ├── bin/
 │   ├── setup.mjs                 # Cross-platform installer
 │   └── uninstall.mjs             # Cross-platform uninstaller
@@ -153,7 +156,7 @@ The setup script merges these settings into your existing `~/.config/opencode/op
 │       └── sub-agents/           # 4 agent prompt templates
 ├── scripts/
 │   └── verify-hash.sh            # Anti-TOCTOU hash verification
-├── tests/                        # 83 tests (Node native test runner)
+├── tests/                        # 84 tests (Node native test runner)
 ├── lib/                          # Core library modules
 ├── installers/                   # Shell/PowerShell install scripts
 └── templates/                    # Config templates
