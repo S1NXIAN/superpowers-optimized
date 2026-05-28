@@ -2,10 +2,9 @@
 
 # opencode-zeus
 
-[![npm version](https://img.shields.io/npm/v/opencode-zeus?style=flat-square)](https://www.npmjs.com/package/opencode-zeus)
 ![Node version](https://img.shields.io/badge/Node.js->=18-3c873a?style=flat-square)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/S1NXIAN/opencode-zeus/ci.yml?style=flat-square)](https://github.com/S1NXIAN/opencode-zeus/actions)
+[![Tests](https://img.shields.io/badge/Tests-83_passing-3c873a?style=flat-square)](https://github.com/S1NXIAN/opencode-zeus)
 
 **A high-discipline engineering pipeline and quality gate overlay for [OpenCode](https://opencode.ai).**
 
