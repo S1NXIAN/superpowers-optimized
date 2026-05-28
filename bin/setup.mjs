@@ -115,8 +115,10 @@ function planJsonMerge(existingConfig) {
   }
   const instructions = existingConfig.instructions || [];
   const instrArray = Array.isArray(instructions) ? instructions : [instructions];
-  if (!instrArray.includes('AGENTS.md')) {
-    changes.push({ field: 'instructions', before: instructions, after: [...instrArray, 'AGENTS.md'] });
+  const requiredInstructions = ['AGENTS.md', 'LITE.md'];
+  const missing = requiredInstructions.filter(i => !instrArray.includes(i));
+  if (missing.length > 0) {
+    changes.push({ field: 'instructions', before: instructions, after: [...instrArray, ...missing] });
   }
   const skillsPaths = existingConfig.skills?.paths || [];
   if (!skillsPaths.includes(SKILLS_PATH)) {
@@ -272,6 +274,8 @@ function verify() {
     const instrArray = Array.isArray(instructions) ? instructions : [instructions];
     if (instrArray.includes('AGENTS.md')) con.outOk('AGENTS.md in instructions');
     else { con.outError('AGENTS.md missing from instructions'); verifyFailed = true; }
+    if (instrArray.includes('LITE.md')) con.outOk('LITE.md in instructions');
+    else con.outInfo('LITE.md not in instructions — optional, enable for token-saving mode');
 
     const skillsPaths = config.skills?.paths || [];
     if (skillsPaths.includes(SKILLS_PATH)) con.outOk('skills.paths includes skills/opencode-zeus');

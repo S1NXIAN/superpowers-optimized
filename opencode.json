@@ -4,7 +4,7 @@
     "superpowers@git+https://github.com/obra/superpowers.git"
   ],
   "default_agent": "zeus",
-  "instructions": ["AGENTS.md"],
+  "instructions": ["AGENTS.md", "LITE.md"],
   "skills": {
     "paths": ["skills"]
   },

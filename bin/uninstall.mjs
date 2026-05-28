@@ -77,8 +77,10 @@ function planJsonRevert(config) {
   }
   const instructions = config.instructions || [];
   const instrArray = Array.isArray(instructions) ? instructions : [instructions];
-  if (instrArray.includes('AGENTS.md')) {
-    const newInstr = instrArray.filter(i => i !== 'AGENTS.md');
+  const zeusInstructions = ['AGENTS.md', 'LITE.md'];
+  const hasAny = zeusInstructions.some(i => instrArray.includes(i));
+  if (hasAny) {
+    const newInstr = instrArray.filter(i => !zeusInstructions.includes(i));
     changes.push({ field: 'instructions', before: instructions, after: newInstr.length > 0 ? newInstr : undefined });
   }
   const skillsPaths = config.skills?.paths || [];
