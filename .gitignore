@@ -13,6 +13,9 @@ Thumbs.db
 .gemini/
 skills-lock.json
 
+# AI-generated design docs and implementation plans (scaffolding, not permanent)
+docs/superpowers/
+
 # Node
 node_modules/
 npm-debug.log
