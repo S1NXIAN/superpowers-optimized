@@ -2,186 +2,180 @@
 
 # opencode-zeus
 
+*A high-discipline engineering pipeline and quality gate overlay for [OpenCode](https://opencode.ai)*
+
+[![Build Status](https://img.shields.io/github/actions/workflow/status/S1NXIAN/opencode-zeus/build-test.yaml?style=flat-square&label=Build)](https://github.com/S1NXIAN/opencode-zeus/actions)
 ![Node version](https://img.shields.io/badge/Node.js->=18-3c873a?style=flat-square)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-**A high-discipline engineering pipeline and quality gate overlay for [OpenCode](https://opencode.ai).**
+⭐ If you like this project, star it on GitHub — it helps a lot!
 
-[Installation](#installation) • [Quickstart](#quickstart) • [Pipeline](#pipeline) • [Skills](#skills) • [Configuration](#configuration)
+[Overview](#overview) • [Features](#features) • [Getting Started](#getting-started) • [Quickstart](#quickstart) • [How it Works](#how-it-works) • [Skills Reference](#skills-reference) • [Testing](#testing) • [Uninstallation](#uninstallation)
 
 </div>
 
-opencode-zeus transforms a vanilla OpenCode AI coding assistant into a structured engineering pipeline with mandatory TDD, security triage, architecture deliberation, and multi-stage code review — all orchestrated by the Zeus agent.
+## Overview
+
+`opencode-zeus` transforms a vanilla OpenCode AI coding assistant into a structured, high-discipline engineering pipeline with mandatory test-driven development (TDD), security triage, architecture deliberation, and multi-stage code review. All processes are orchestrated by a central Zeus agent that dynamically scales its quality gate ceremony to match the complexity of the incoming task.
 
 > [!NOTE]
-> opencode-zeus extends the [Superpowers](https://github.com/obra/superpowers) methodology for OpenCode. It does not replace any existing OpenCode functionality.
+> This overlay extends the [Superpowers](https://github.com/obra/superpowers) engineering methodology specifically optimized for OpenCode environments. It operates completely locally, with zero third-party dependencies, running purely on Node.js built-in modules.
 
 ## Features
 
-- **Complexity-aware routing** — Zeus classifies every task as Fast Path (simple: fix, rename, typo) or Full Path (complex: new subsystem, 4+ files, cross-cutting), applying only the ceremony that fits.
-- **Hard-coded security triage** — Every touched file is pattern-matched against 1,236 security patterns across 17 languages. No judgment calls. If a trigger fires, full audit is mandatory.
-- **Multi-perspective architecture audits** — Deliberation Gate simulates Skeptic, Minimalist, and Maintainer roles before any tier-3 architecture work, with a confidence-weighted synthesis.
-- **Consequence-weighted sub-agents** — Social accountability framing injected as the first line of every sub-agent prompt. Templates for Implementer, Spec Reviewer, Code Quality Reviewer, and Security Reviewer.
-- **One-issue-at-a-time fix loop** — ASI Loop prevents regression cascades by fixing one overlapping-code issue per cycle with reproducer-first TDD and file-backed state.
-- **Lite mode** — Optional token-saving compression. Add `LITE.md` to the `instructions` array to enable caveman-mode AI responses. Remove it to disable.
-- **Zero dependencies** — Built with Node.js built-in modules only. No npm dependencies.
+* 🎯 **Complexity-Aware Routing** - Dynamically classifies incoming developer tasks. Simple tasks (typos, single file changes) bypass unnecessary pipeline stages to execute on the Fast Path, while larger or riskier tasks route to the Full Path.
+* 🛡️ **Automated Security Triage** - Executes an automated pattern match checking every single touched file against 1,236 security patterns across 17 languages. If any trigger is matched, the workflow escalates to Full Path for a mandatory manual audit.
+* 🧠 **Multi-Perspective Architecture Audits** - Implements the `deliberation-gate` skill to simulate distinct agent perspectives (Skeptic, Minimalist, Maintainer) before any complex, multi-file architectural work begins.
+* 🤝 **Consequence-Weighted Sub-Agents** - Dispatches isolated units of implementation work to sub-agents with strict, context-injected social-accountability framing (roles include Implementer, Spec Reviewer, Code Quality Reviewer, and Security Reviewer).
+* 🔄 **ASI (Anti-Regression) Fix Loop** - Resolves complex, overlapping-code errors one file and one issue at a time using test-reproducer isolation and `asi.sh` state machines to prevent cascading regressions.
+* ⚡ **Optional Token-Saving Lite Mode** - Supports response compression via a highly optimized "caveman" communication standard (defined in `LITE.md`) that reduces LLM token consumption by up to 75% without compromising technical precision.
 
-## Installation
-
-```bash
-git clone https://github.com/S1NXIAN/opencode-zeus.git
-cd opencode-zeus
-node bin/setup.mjs --force
-```
-
-This copies the skill files, agent definition, and prompts into `~/.config/opencode/` and merges the OpenCode configuration to register the Zeus agent and skill paths.
+## Getting Started
 
 ### Prerequisites
 
-- [OpenCode](https://opencode.ai) installed and configured
-- Node.js 18+
-- The [Superpowers](https://github.com/obra/superpowers) plugin added to your `opencode.json` (setup.mjs does this automatically)
+Before installing `opencode-zeus`, ensure you have the following installed on your machine:
+* [OpenCode](https://opencode.ai) CLI and runtime environment
+* Node.js LTS (version 18 or higher)
 
-> [!TIP]
-> Run `node bin/setup.mjs --dry-run` first to preview what changes will be made without touching anything.
+### Installation
+
+`opencode-zeus` provides a cross-platform installer script that automates config merging and file deployment.
+
+1. Clone this repository to your local workspace:
+   ```bash
+   git clone https://github.com/S1NXIAN/opencode-zeus.git
+   cd opencode-zeus
+   ```
+
+2. Run the cross-platform setup utility:
+   ```bash
+   node bin/setup.mjs
+   ```
+
+   > [!TIP]
+   > You can run a dry-run first to see exactly what files and configurations will be updated without modifying anything on your local disk:
+   > ```bash
+   > node bin/setup.mjs --dry-run
+   > ```
+
+The installer copies skills, agent instructions, and scripts into `~/.config/opencode/` and merges required configurations into your local `opencode.json`. Existing settings are automatically backed up prior to any write operations.
 
 ## Quickstart
 
-Once installed, opencode-zeus is active on every OpenCode session:
+Once installed, the Zeus orchestrator automatically wraps all OpenCode developer interactions. You can trigger different pipeline ceremonies using standard developer command patterns or inline annotations:
 
-```
-# Common development tasks — full pipeline with TDD, reviews, and verification
+```bash
+# Standard engineering task: runs full brainstorming, planning, and review pipeline
 open "implement the user registration endpoint"
 
-# Simple fixes skip the ceremony
+# Bypass ceremony for simple copy changes or single-file fixes
 open "fix the typo in login error message"
 
-# Security-sensitive paths trigger automatic audit
+# Security-sensitive modules trigger mandatory audit and full pipeline regardless of size
 open "refactor the auth middleware"
 ```
 
-The Zeus agent classifies each request automatically:
+### Manual Overrides
 
-| Classification | Trigger | What runs |
-|---|---|---|
-| **Fast Path** | `@quick`, or ≤2 files + fix/rename/update keywords + single concern | TDD → Verification → Cleanup |
-| **Full Path** | `@full`, or 4+ files, security trigger, new subsystem, cross-cutting | Brainstorming → Security Triage → Plans → Sub-Agents (with social-accountability framing) → ASI Loop (if overlapping fixes) → Review → Merge → Cleanup |
+You can explicitly force specific routing behaviors by prepending commands with standard directives:
 
-### Manual Override
-
-You can force the classification with annotations:
-
-```
+```bash
+# Force the full quality gate pipeline on a simple task
 open "@full add a favicon"
+
+# Force the fast path workflow on a task
 open "@quick implement the entire auth system"
 ```
 
 > [!IMPORTANT]
-> Security triggers override all annotations. If T1/T2/T3 patterns fire on any touched file, the task is always routed to Full Path regardless of `@quick`.
+> Security triggers always override manual overrides. If T1, T2, or T3 patterns match any modified file, the Zeus agent escalates the task to the Full Path workflow even if `@quick` is specified.
 
-## Pipeline
+### Task Routing Matrix
 
-Full Path tasks execute the standard Superpowers pipeline with these stages:
+| Route | Trigger Conditions | Pipeline Execution Flow |
+| :--- | :--- | :--- |
+| **Fast Path** | `@quick` annotation, OR files touched ≤ 2 with task keywords in `{fix, typo, rename, update, bump, refactor}` and a single logical concern. | Security Triage (passed) &rarr; TDD (RED &rarr; GREEN &rarr; REFACTOR) &rarr; Self-Consistency Verification &rarr; Automated Cleanup. |
+| **Full Path** | `@full` annotation, OR 4+ files touched, OR security pattern trigger, OR new subsystem, OR cross-cutting changes. | Brainstorming & Deliberation &rarr; Security Triage &rarr; Action Plans &rarr; Sub-Agent Implementation & Review &rarr; ASI Fix Loop (if needed) &rarr; Verification &rarr; User Approval &rarr; Automated Cleanup. |
 
-1. **Brainstorming & Deliberation** — Explore requirements, propose approaches, present design. For tier-3 tasks (4+ files, new subsystem, cross-cutting), the Deliberation Gate runs a multi-perspective audit first.
-2. **Security Triage** — Re-confirm all security triggers. Run the full security review checklist if any T1/T2/T3 match fired.
-3. **Writing Plans** — Bite-sized implementation tasks (2-5 minutes each) with exact file paths and test-first steps. User approves the plan before execution.
-4. **Sub-Agent Dispatch** — Tasks dispatched with social-accountability framing. Review order: Spec Reviewer → (Security Reviewer if triage fired) → Code Quality Reviewer.
-5. **ASI Loop** — If overlapping-code issues are found, fix one per cycle with reproducer-first TDD and file-backed state.
-6. **Verification & Self-Consistency** — Full test suite, side-effect checks, and 2-3 independent verification angles.
-7. **Review & Merge** — Final summary with verification evidence. User approval required before merge.
-8. **Cleanup** — `node bin/cleanup.mjs` removes AI-generated temp files (design docs, plans, state files).
+## How it Works
 
-Fast Path skips directly to TDD (RED → GREEN → REFACTOR) followed by self-consistency verification and cleanup.
+### Full Path Workflow
 
-## Skills
+Complex or risky developer tasks proceed through the complete high-discipline execution pipeline:
 
-opencode-zeus provides four skill files that are automatically loaded by OpenCode:
+1. **Brainstorming & Deliberation** - The active workspace is analyzed, options are evaluated, and a concrete design blueprint is drafted. For tier-3 tasks (4+ files or major subsystems), the `deliberation-gate` skill is executed to simulate Minimalist, Skeptic, and Maintainer perspectives before final design approval.
+2. **Security Triage** - Files are audited against the comprehensive language-specific patterns in `skills/security-triage/patterns/`. Any production impacts are flagged and presented directly to the user.
+3. **Writing Plans** - The approved design is broken down into bite-sized tasks (2-5 minutes each) with precise file paths, verification steps, and test-first requirements.
+4. **Sub-Agent Dispatch** - Implementation tasks are delegated to isolated sub-agents. The agent prompt is automatically injected with consequence-weighted social-accountability instructions matching their assigned role (Implementer, Spec Reviewer, Code Quality Reviewer, or Security Reviewer).
+5. **ASI Loop** - If multiple overlapping issues are found, the `asi-loop` protocol isolates and corrects one issue per cycle using reproducer-first TDD.
+6. **Verification & Self-Consistency** - The full test suite runs, and the agent generates 2-3 independent verification checks from different analytical angles to confirm complete functionality.
+7. **Review & Merge** - A comprehensive summary of the changes and test evidence is presented. No branch changes are merged without explicit user approval.
+8. **Cleanup** - The cleanup process (`node bin/cleanup.mjs`) automatically purges all temporary files (design documents, plans, state files) generated during the session.
 
-| Skill | File | Purpose |
-|---|---|---|
-| **asi-loop** | `skills/asi-loop/SKILL.md` | One-issue-at-a-time patching for overlapping-code fixes. State managed by `scripts/asi.sh`. |
-| **deliberation-gate** | `skills/deliberation-gate/SKILL.md` | Multi-perspective architecture audit (Skeptic, Minimalist, Maintainer) with confidence-weighted synthesis. |
-| **security-triage** | `skills/security-triage/SKILL.md` | Hard-coded T1/T2/T3 pattern matching against 1,236 patterns in 16 language-specific files. |
-| **social-accountability** | `skills/social-accountability/SKILL.md` | Consequence-weighted sub-agent framing. Templates at `sub-agents/`. |
+### Fast Path Workflow
 
-Configuration files and scripts are also deployed:
+For simple changes, Zeus streamlines the process to maintain speed without sacrificing code quality:
+1. **TDD Execution** - Bypasses planning to jump straight into test-driven development (RED &rarr; GREEN &rarr; REFACTOR).
+2. **Self-Consistency Verification** - Runs tests, inspects git diffs, and checks edge cases before claiming success.
+3. **Automated Cleanup** - Purges AI-generated temporary files automatically.
 
-| File | Purpose |
-|---|---|
-| `agent/zeus.md` | Zeus orchestrator agent definition — decision tree routing and full pipeline. |
-| `AGENTS.md` | Iron rules for Superpowers alignment (highest-priority system instructions). |
-| `scripts/verify-hash.sh` | Anti-TOCTOU SHA-256 hash verification for security-critical work. |
-| `LITE.md` | Optional instruction file — enables compressed caveman responses when added to `instructions` array. |
-| `bin/setup.mjs` | Cross-platform installer — copies files, merges config, backs up originals. |
-| `bin/uninstall.mjs` | Reverses setup — removes managed files and restores backups. |
+## Skills Reference
 
-## Configuration
+`opencode-zeus` installs several modular engineering skills and automation drivers:
 
-The project is registered in OpenCode via `opencode.json`:
+### Skill Protocols
 
-```json
-{
-  "plugin": ["superpowers@git+https://github.com/obra/superpowers.git"],
-  "default_agent": "zeus",
-  "instructions": ["AGENTS.md"],
-  "skills": {
-    "paths": ["skills"]
-  },
-  "autoupdate": false
-}
-```
+| Skill Name | Location | Purpose |
+| :--- | :--- | :--- |
+| **`asi-loop`** | `skills/asi-loop/SKILL.md` | One-issue-at-a-time patching mechanism for overlapping-code fixes. Driven by `skills/asi-loop/scripts/asi.sh`. |
+| **`deliberation-gate`** | `skills/deliberation-gate/SKILL.md` | Multi-perspective architecture audit protocol (Skeptic, Minimalist, Maintainer). |
+| **`security-triage`** | `skills/security-triage/SKILL.md` | Pre-execution pattern-matching engine using 1,236 signatures across 17 languages. |
+| **`social-accountability`** | `skills/social-accountability/SKILL.md` | Context-injected agent prompts forcing strict role accountability and peer-review structures. |
 
-The setup script merges these settings into your existing `~/.config/opencode/opencode.json`. Backups are saved to `~/.config/opencode/.backups/` before any changes.
+### Core System Files
 
-## Project Structure
-
-```
-├── agent/
-│   └── zeus.md                   # Zeus orchestrator agent
-├── LITE.md                       # Optional token-saving compression mode
-├── bin/
-│   ├── setup.mjs                 # Cross-platform installer
-│   └── uninstall.mjs             # Cross-platform uninstaller
-├── skills/
-│   ├── asi-loop/
-│   │   ├── SKILL.md              # ASI loop protocol
-│   │   └── scripts/asi.sh        # State machine driver
-│   ├── deliberation-gate/
-│   │   └── SKILL.md              # Architecture audit protocol
-│   ├── security-triage/
-│   │   ├── SKILL.md              # Security trigger rules
-│   │   └── patterns/             # 1,236 patterns across 17 languages
-│   └── social-accountability/
-│       ├── SKILL.md              # Consequence-weighted framing
-│       └── sub-agents/           # 4 agent prompt templates
-├── scripts/
-│   └── verify-hash.sh            # Anti-TOCTOU hash verification
-├── tests/                        # 154 tests (Node native test runner)
-├── lib/                          # Core library modules
-├── installers/                   # Shell/PowerShell install scripts
-└── templates/                    # Config templates
-```
+| File Path | Description |
+| :--- | :--- |
+| **`agent/zeus.md`** | The primary Zeus orchestrator agent definition, housing decision trees and routing workflows. |
+| **`AGENTS.md`** | Global superpowers alignment rules and non-negotiable instruction hierarchy. |
+| **`LITE.md`** | Communication protocol definition for caveman-style, token-saving responses. |
+| **`scripts/verify-hash.sh`** | Anti-TOCTOU hash verification utility for security-critical environments. |
+| **`bin/setup.mjs`** | Installation script for merging configuration files and registering skills. |
+| **`bin/uninstall.mjs`** | Uninstallation script to cleanly restore original configurations and remove files. |
 
 ## Testing
 
+The project is backed by a comprehensive suite of 154 unit and integration tests written using Node.js's native test runner (no third-party dependencies required).
+
+You can run the entire test suite or target specific layers of the system:
+
 ```bash
-npm test              # Run all tests
-npm run test:unit     # Run library unit tests
-npm run test:agent    # Run agent structure tests
-npm run test:integration  # Run CLI integration tests
+# Run the complete test suite
+npm test
+
+# Run unit tests for core libraries (fs-utils, constants, command-guard, etc.)
+npm run test:unit
+
+# Run orchestrator agent structure and rule validation tests
+npm run test:agent
+
+# Run CLI installation and setup integration tests
+npm run test:integration
 ```
 
-## Uninstall
+## Uninstallation
+
+If you need to remove the `opencode-zeus` overlay and restore your original OpenCode configuration:
 
 ```bash
 node bin/uninstall.mjs
 ```
 
-Restores your OpenCode configuration and files from the backup created during installation.
+This utility restores the backup of `opencode.json` that was captured during the initial installation and recursively removes all deployed files.
 
 ---
 
 <div align="center">
-  <sub>Built with Node.js built-in modules. Zero dependencies.</sub>
+  <sub>Built purely with Node.js built-in modules. Zero third-party dependencies.</sub>
 </div>
