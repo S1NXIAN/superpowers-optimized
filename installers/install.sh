@@ -6,7 +6,7 @@
 #   bash <(curl -fsSL https://raw.githubusercontent.com/S1NXIAN/opencode-zeus/main/installers/install.sh)
 #
 # What it does:
-#   1. Detects OS and installs Node.js, ripgrep, and fd if missing
+#   1. Detects OS and installs Node.js if missing
 #   2. Downloads the repo as a tarball (no git required)
 #   3. Runs bin/setup.mjs --force
 #   4. Cleans up the temp directory

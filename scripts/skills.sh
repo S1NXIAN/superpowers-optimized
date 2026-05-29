@@ -10,7 +10,7 @@ readonly SKILLS_DIR="${HOME}/.config/opencode/skills/opencode-zeus"
 readonly BIN_DIR="${HOME}/.config/opencode/bin"
 
 # ---------------------------------------------------------------------------
-# High-Performance Discovery
+# Skill Discovery (prefer fd, fallback to ls)
 # ---------------------------------------------------------------------------
 list_skills() {
     if command -v fd >/dev/null 2>&1; then

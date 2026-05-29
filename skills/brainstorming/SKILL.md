@@ -13,7 +13,7 @@ Siege the Idea. Build the Mind.
 - If a Critical failure is identified &rarr; **ABORT** &rarr; Redesign the core idea.
 
 ## Operational Cycle
-1.  **Context Probe:** Use `rg` and `fd` to map the target somatic region (files, docs, recent commits).
+1.  **Context Probe:** Map the target somatic region (files, docs, recent commits).
 2.  **The Single Turn:** Ask ALL clarifying questions in a single response turn. Use multiple-choice where possible.
 3.  **The Siege:** Propose 2-3 approaches with trade-offs. Perform the Failure-Mode check on the recommended path.
 4.  **The Blueprint:** Save approved design to `docs/zeus/specs/YYYY-MM-DD-<topic>.md`.

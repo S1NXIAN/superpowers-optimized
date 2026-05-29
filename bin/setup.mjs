@@ -2,7 +2,6 @@
 import { existsSync, lstatSync, mkdirSync } from 'node:fs';
 import { join, dirname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execSync } from 'node:child_process';
 
 import {
   SKILLS_PATH, CONFIG_DIR, CONFIG_JSON_PATH,
@@ -197,52 +196,6 @@ async function confirm() {
   });
 }
 
-function installSystemDependencies() {
-  con.outHeader('System Dependencies');
-  const tools = [
-    { name: 'rg', check: 'rg --version' },
-    { name: 'fd', check: 'fd --version || fdfind --version' },
-    { name: 'sd', check: 'sd --version || fastmod --version' },
-    { name: 'ast-grep', check: 'ast-grep --version || sg --version' },
-    { name: 'bat', check: 'bat --version || batcat --version' }
-  ];
-
-  const missing = tools.filter(t => {
-    try {
-      execSync(t.check, { stdio: 'ignore' });
-      con.outOk(`${t.name} is already installed`);
-      return false;
-    } catch {
-      return true;
-    }
-  });
-
-  if (missing.length === 0) return;
-
-  if (dryRunMode) {
-    con.outInfo(`Would install missing tools: ${missing.map(m => m.name).join(', ')}`);
-    return;
-  }
-
-  con.outInfo('Installing missing dependencies...');
-
-  try {
-    if (existsSync('/etc/debian_version')) {
-      execSync('sudo apt-get update -qq && sudo apt-get install -y ripgrep fd-find sd fastmod ast-grep bat', { stdio: 'inherit' });
-    } else if (existsSync('/etc/fedora-release') || existsSync('/etc/redhat-release')) {
-      execSync('sudo dnf install -y ripgrep fd-find sd fastmod ast-grep bat', { stdio: 'inherit' });
-    } else if (existsSync('/etc/arch-release')) {
-      execSync('sudo pacman -S --noconfirm ripgrep fd sd fastmod ast-grep bat', { stdio: 'inherit' });
-    } else if (process.platform === 'darwin') {
-      execSync('brew install ripgrep fd sd fastmod ast-grep bat', { stdio: 'inherit' });
-    } else {
-      con.outWarn('Automatic installation not supported for this OS. Please install tools manually.');
-    }
-  } catch (err) {
-    con.outError(`Failed to install dependencies: ${err.message}`);
-  }
-}
-
 function installConfig(configChanges) {
   if (configChanges.length === 0) return;
   const config = readJson(CONFIG_JSON_PATH);
@@ -393,7 +346,6 @@ async function main() {
   }
 
   con.outHeader('Installing');
-  installSystemDependencies();
   installConfig(configChanges);
   installFiles(fileChanges, dirChanges);
   installGitHook();

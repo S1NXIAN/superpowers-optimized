@@ -1,27 +1,26 @@
 #!/usr/bin/env node
 /**
- * staleness-check.mjs — memory freshness check
+ * staleness-check.mjs — context-snapshot freshness check
  *
  * Usage:
  *   node bin/staleness-check.mjs [project_root]
  *   node bin/staleness-check.mjs --help
  *
  * Output (one line):
- *   FRESH | SNAPSHOT_STALE:<h> | MAP_STALE:<h> | SNAPSHOT_MISSING | MAP_MISSING | NO_GIT
+ *   FRESH | SNAPSHOT_STALE:<h> | SNAPSHOT_MISSING | NO_GIT
  */
 
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { execSync } from 'node:child_process';
 
-const HELP = `staleness-check — check memory file freshness
+const HELP = `staleness-check — check context-snapshot freshness
 
 Usage:
   node bin/staleness-check.mjs [project_root]
 
 Output:
-  FRESH, SNAPSHOT_STALE:<hash>, MAP_STALE:<hash>,
-  SNAPSHOT_MISSING, MAP_MISSING, or NO_GIT
+  FRESH, SNAPSHOT_STALE:<hash>, SNAPSHOT_MISSING, or NO_GIT
 `;
 
 function main() {
@@ -60,23 +59,6 @@ function main() {
     }
   } catch {
     console.log('SNAPSHOT_STALE:invalid');
-    return;
-  }
-
-  // Check project-map.md
-  const mapPath = join(memDir, 'project-map.md');
-  if (!existsSync(mapPath)) {
-    console.log('MAP_MISSING');
-    return;
-  }
-  const mapContent = readFileSync(mapPath, 'utf8');
-  const hashMatch = mapContent.match(/Git:\s*([a-f0-9]+)/);
-  if (!hashMatch) {
-    console.log('MAP_STALE:unknown');
-    return;
-  }
-  if (hashMatch[1] !== headHash) {
-    console.log('MAP_STALE:' + hashMatch[1]);
     return;
   }
 

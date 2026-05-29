@@ -10,7 +10,7 @@
  *   [{"tier":"T1","pattern":"auth*","file":"src/auth/login.js"}, ...]
  */
 
-import { readFileSync, existsSync, readdirSync, lstatSync } from 'node:fs';
+import { readFileSync, existsSync, lstatSync } from 'node:fs';
 import { join, dirname, basename, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 

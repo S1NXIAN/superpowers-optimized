@@ -38,17 +38,6 @@ describe('bin/init-memory', () => {
     assert.ok(existsSync(join(dir, 'zeus', 'memory')));
   });
 
-  it('generates project-map.md in zeus/memory/', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'init-test-'));
-    createGitRepo(dir);
-    runScript(dir);
-    const mapPath = join(dir, 'zeus', 'memory', 'project-map.md');
-    assert.ok(existsSync(mapPath));
-    const content = readFileSync(mapPath, 'utf8');
-    assert.ok(content.includes('# Project Map'));
-    assert.ok(content.includes('## Directory Structure'));
-  });
-
   it('creates known-issues.md template in zeus/memory/', () => {
     const dir = mkdtempSync(join(tmpdir(), 'init-test-'));
     createGitRepo(dir);
@@ -75,11 +64,11 @@ describe('bin/init-memory', () => {
     createGitRepo(dir);
     const memDir = join(dir, 'zeus', 'memory');
     mkdirSync(memDir, { recursive: true });
-    const mapPath = join(memDir, 'project-map.md');
-    const originalContent = '# Custom map\n';
-    writeFileSync(mapPath, originalContent);
+    const knownPath = join(memDir, 'known-issues.md');
+    const originalContent = '# Custom known issues\n';
+    writeFileSync(knownPath, originalContent);
     runScript(dir);
-    const content = readFileSync(mapPath, 'utf8');
+    const content = readFileSync(knownPath, 'utf8');
     assert.equal(content, originalContent);
   });
 
@@ -88,10 +77,10 @@ describe('bin/init-memory', () => {
     createGitRepo(dir);
     const memDir = join(dir, 'zeus', 'memory');
     mkdirSync(memDir, { recursive: true });
-    const mapPath = join(memDir, 'project-map.md');
-    writeFileSync(mapPath, '# Stale map\n');
+    const snapPath = join(memDir, 'context-snapshot.json');
+    writeFileSync(snapPath, '{"stale": true}');
     runScript(dir, ['--force']);
-    const content = readFileSync(mapPath, 'utf8');
-    assert.ok(content.includes('# Project Map'));
+    const content = JSON.parse(readFileSync(snapPath, 'utf8'));
+    assert.ok(content.git_hash);
   });
 });

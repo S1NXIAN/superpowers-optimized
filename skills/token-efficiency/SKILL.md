@@ -16,10 +16,7 @@ Maximize Firepower. Minimize Noise.
 ## Tool Execution Rules
 1.  **Parallelism:** Batch all independent tool calls in a single response.
 2.  **No Redundant Reads:** Never re-read a file unless modified since last read.
-3.  **Search over Read:** Use `rg` instead of `grep` for all content searches.
-4.  **Discovery over Bash:** Use `fd` instead of `find` or `ls -R`.
-5.  **Maximize SNR:** Use `bat` for file reading in terminal to maximize SNR.
-6.  **Structural Power:** Use `sd` for large-scale regex replacements and `ast-grep` for structural code refactoring.
+3.  **Search over Read:** Use search tools to find files by content rather than reading directories.
 
 ## Agent & History Rules
 1.  **Direct Conclusion:** Use sub-agents for specialized logic, not data relay.

@@ -9,7 +9,7 @@ Precision Mapping. Zero Ambiguity.
 
 ## The Somatic Scan (Blast Radius)
 Before defining tasks, perform a mandatory **Call-Graph Audit**:
-1.  **Callers:** Use `rg` to find what other modules call this code.
+1.  **Callers:** Find what other modules call this code.
 2.  **Dependencies:** Identify what this code depends on.
 3.  **Side Effects:** Explicitly state if this change will force updates in `tests/`, `configs/`, or `migrations/`.
 
@@ -17,7 +17,6 @@ Before defining tasks, perform a mandatory **Call-Graph Audit**:
 1.  **TDD Motor:** Every logical change MUST include a Step 1: "Write failing test" and a Step 2: "Verify RED."
 2.  **Atomic Precision:** Keep each task to a 2-5 minute vertical slice.
 3.  **No Placeholders:** Never use "update logic" or "add validation." Show the exact code or command.
-4.  **Specialized Tooling:** Prefer `sd` for regex renames and `ast-grep` for structural changes.
 
 ## Self-Review Checklist
 - [ ] **Spec Alignment:** Every requirement in the design has a vertical task.

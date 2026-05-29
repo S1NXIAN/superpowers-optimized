@@ -10,7 +10,7 @@
 
 ⭐ If you like this project, star it on GitHub — it helps a lot!
 
-[Overview](#overview) • [Features](#features) • [High-Performance Tooling](#high-performance-tooling) • [Getting Started](#getting-started) • [Quickstart](#quickstart) • [How it Works](#how-it-works) • [Skills Reference](#skills-reference) • [Testing](#testing) • [Uninstallation](#uninstallation)
+[Overview](#overview) • [Features](#features) • [Getting Started](#getting-started) • [Quickstart](#quickstart) • [How it Works](#how-it-works) • [Skills Reference](#skills-reference) • [Testing](#testing) • [Uninstallation](#uninstallation)
 
 </div>
 
@@ -21,7 +21,7 @@
 Orchestrated by a modular Zeus core, the system dynamically routes tasks through specialized workflows, utilizing a Strike Team of hyper-focused agents to ensure zero-defect production code.
 
 > [!IMPORTANT]
-> **Full Sovereignty:** This project has diverged from its predecessors. It is a standalone system with zero external plugin dependencies, running purely on Node.js built-in modules and high-performance Unix binaries.
+> **Full Sovereignty:** This project has diverged from its predecessors. It is a standalone system with zero external plugin dependencies, running purely on Node.js built-in modules and standard Unix binaries.
 
 ## Features
 
@@ -35,18 +35,6 @@ Orchestrated by a modular Zeus core, the system dynamically routes tasks through
 * 📏 **Somatic Blast Radius Analysis** - Automatically audits call-graphs and dependencies before implementation to prevent remote regressions.
 * ⚡ **Parallel Wave Execution** - Dispatches disjoint implementation tasks in single-turn bursts, increasing development velocity by up to 60% while optimizing KV-cache hits.
 * 🔄 **Deterministic State Machine** - Utilizes `skills.sh` for content-aware semantic routing and `asi.sh` for conflict-free overlapping-code resolution.
-
-## High-Performance Tooling
-
-Zeus Elite mandates and automatically integrates the "Staff Engineer’s Toolkit" for maximum somatic speed:
-
-| Tool | Purpose | Advantage |
-| :--- | :--- | :--- |
-| **`rg`** | Content Search | 10x faster than `grep`, respects `.gitignore`. |
-| **`fd`** | File Discovery | Instant repository mapping, replaces slow `find`. |
-| **`sd`** | Regex Refactor | High-speed, safe string replacement. |
-| **`ast-grep`**| Structural Search | Patterns based on code syntax, not brittle strings. |
-| **`bat`** | High-SNR Reading | Syntax-highlighted, paged terminal output. |
 
 ## Getting Started
 
@@ -79,7 +67,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/S1NXIAN/opencode-zeus/main/i
    node bin/setup.mjs
    ```
 
-The installer will probe your system (apt, pacman, dnf, or brew) and automatically install the required high-performance tools if they are missing.
+The installer will probe your system (apt, pacman, dnf, or brew) and install any recommended system tools.
 
 ## Quickstart
 

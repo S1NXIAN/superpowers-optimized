@@ -11,7 +11,7 @@ Zero Judgment. 100% Pattern Match.
 **Every file touched** (create/modify/delete) must be scanned. Task intent is irrelevant. If a trigger fires, the task is forced to **Full Path** and `deliberation-gate` becomes mandatory.
 
 ## Automation Gate
-Use the high-performance scanner for T1-T3 matching:
+Use the security scanner for T1-T3 matching:
 ```bash
 node $HOME/.config/opencode/bin/security-scan.mjs <files...>
 ```

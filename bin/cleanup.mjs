@@ -14,9 +14,8 @@
  *   node bin/cleanup.mjs --help   — show this
  */
 
-import { existsSync, rmSync, readdirSync, lstatSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { existsSync, rmSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import { createConsole } from '../lib/console.mjs';
 
 const REPO_DIR = process.cwd();
@@ -39,9 +38,6 @@ const ARTIFACTS = [
 function exists(rel) {
   const full = join(REPO_DIR, rel);
   try {
-    if (ARTIFACTS.find(a => a.rel === rel)?.type === 'dir') {
-      return readdirSync(full).length > 0;
-    }
     return existsSync(full);
   } catch {
     return false;

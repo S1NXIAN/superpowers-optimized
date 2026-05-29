@@ -25,13 +25,6 @@ Every file touched must be scanned by `security-triage`. Pattern matches (T1/T2/
 -   **YAGNI + DRY**: Build only what is needed. Eliminate all logic redundancy.
 -   **Orchestrate, Don't Implementation**: Zeus plans and reviews; sub-agents implement.
 
-## High-Performance Tooling (Mandatory)
-
--   **Search**: Use `rg` instead of `grep` for all content searches.
--   **Discovery**: Use `fd` instead of `find` or `ls -R`.
--   **Reading**: Use `bat` for file reading in terminal to maximize SNR.
--   **Refactoring**: Use `sd` for large-scale regex replacements and `ast-grep` for structural code refactoring.
-
 ## Red Flag Guard
 If you think: "It's too simple for a skill" or "I'll test later" &rarr; **STOP**. Invoke the skill immediately.
 
