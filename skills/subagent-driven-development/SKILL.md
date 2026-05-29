@@ -14,7 +14,7 @@ Maximum Firepower. Parallel Force.
 
 ## The Operational Wave
 1.  **WAVE Grouping:** Parse the `plan.md` and group tasks by file-disjointness.
-2.  **Strike Handoff:** Lead with Social Accountability framing for every agent.
+ 2.  **Strike Handoff:** Use the subagent's system prompt as the Task tool prompt.
 3.  **Two-Stage Review Gate:**
     - **Stage 1 (Spec):** `spec-reviewer` confirms implementation matches plan.
     - **Stage 2 (Quality):** `code-quality` checks for technical debt and SNR.
