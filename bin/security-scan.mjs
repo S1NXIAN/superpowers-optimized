@@ -10,7 +10,7 @@
  *   [{"tier":"T1","pattern":"auth*","file":"src/auth/login.js"}, ...]
  */
 
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync, lstatSync } from 'node:fs';
 import { join, dirname, basename, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -282,7 +282,7 @@ function main() {
     allResults.push(...checkT3(displayPath, t3Patterns));
 
     // T2: content check
-    if (existsSync(filePath)) {
+    if (existsSync(filePath) && lstatSync(filePath).isFile()) {
       const content = readFileSync(filePath, 'utf8');
       const ext = getExtension(filePath);
       const langPatterns = loadT2LanguagePatterns(ext);
