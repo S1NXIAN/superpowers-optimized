@@ -34,14 +34,17 @@ describe('Zeus Elite Architecture', () => {
       it('References security-triage skill', () => assert.ok(zeusContent.includes('security-triage')));
     });
 
-    describe('Strike Team Dispatch', () => {
-      it('Has Strike Team Dispatch section', () => assert.ok(zeusContent.includes('Strike Team Dispatch')));
+    describe('Subagent Dispatch (@mention)', () => {
+      it('Has Subagent Dispatch section', () => assert.ok(zeusContent.includes('Subagent Dispatch')));
       it('References subagents by process names', () => {
         assert.ok(zeusContent.includes('@security-audit'));
         assert.ok(zeusContent.includes('@structure-review'));
+        assert.ok(zeusContent.includes('@code-exploration'));
+        assert.ok(zeusContent.includes('@root-cause-analysis'));
         assert.ok(zeusContent.includes('@verification'));
         assert.ok(zeusContent.includes('@code-cleanup'));
       });
+      it('Mentions @mention-only dispatch rule', () => assert.ok(zeusContent.includes('@mention')));
     });
 
     describe('Model Strategy', () => {
