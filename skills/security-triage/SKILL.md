@@ -20,7 +20,7 @@ manually. One command replaces reading pattern files + mentally matching every
 file path and line.
 
 ```bash
-node bin/security-scan.mjs <file1> <file2> ...
+node ~/.config/opencode/bin/security-scan.mjs <file1> <file2> ...
 ```
 
 Output: JSON array of matches (empty `[]` if clean). Example:
@@ -29,7 +29,7 @@ Output: JSON array of matches (empty `[]` if clean). Example:
 ```
 
 **When to use it:**
-- Run `bin/security-scan.mjs` on all task files immediately
+- Run `~/.config/opencode/bin/security-scan.mjs` on all task files immediately
 - Parse output for matches → feed into T4 Escalation Protocol
 - If clean (`[]`), still check the Limitations section below — pattern
   matching is incomplete
@@ -171,8 +171,8 @@ Re-check every file you read (not just modified), list all matches (don't anchor
 ## Trigger Check Procedure (execute in this order)
 ```
 0. Run automated scan:
-     node bin/security-scan.mjs <files...>
-   → Parse JSON output for any matches
+      node ~/.config/opencode/bin/security-scan.mjs <files...>
+    → Parse JSON output for any matches
 1. If ANY file has ANY match:
    → Execute T4 Escalation Protocol
 2. If NO file has ANY match:

@@ -8,13 +8,14 @@
     "google": {
       "whitelist": [
         "gemini-3.1-flash-lite-preview",
-        "gemini-3-flash-preview"
+        "gemini-3-flash-preview",
+        "gemini-3.5-flash"
       ]
     }
   },
   "autoupdate": false,
   "default_agent": "zeus",
-  "instructions": ["AGENTS.md"],
+  "instructions": ["AGENTS.md", "LITE.md"],
   "skills": {
     "paths": ["skills/opencode-zeus"]
   }

@@ -157,7 +157,7 @@ The setup script merges these settings into your existing `~/.config/opencode/op
 │       └── sub-agents/           # 4 agent prompt templates
 ├── scripts/
 │   └── verify-hash.sh            # Anti-TOCTOU hash verification
-├── tests/                        # 84 tests (Node native test runner)
+├── tests/                        # 154 tests (Node native test runner)
 ├── lib/                          # Core library modules
 ├── installers/                   # Shell/PowerShell install scripts
 └── templates/                    # Config templates
