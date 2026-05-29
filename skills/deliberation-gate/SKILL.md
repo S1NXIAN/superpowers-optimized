@@ -1,36 +1,41 @@
 ---
 name: deliberation-gate
-description: Multi-perspective architecture audit for Tier-3 tasks. Simulates Skeptic, Minimalist, and Maintainer roles.
+description: High-SNR strategy gate. Simulates conflicting stakeholders to determine if a design is sound or should be aborted.
 ---
 
 # Deliberation Gate
 
-Conflict is clarity. Consensus is stability.
+Surface Tension. Determine Exit.
 
 ## The Iron Rule
-**Tier-3 tasks REQUIRE Deliberation.** 
-- Mandatory if: 4+ files, new subsystem, cross-cutting logic, or security trigger.
-- Internal Reasoning: Simulate roles sequentially. No tools. No sub-agents.
+**Consensus is not the goal; understanding the trade-off is.** Load this skill ONLY for Tier-3 tasks (4+ files, new subsystem, or security triggers).
 
-## The Roles
+## Phase 1: Frame the Decision
+Define the choice in one elite sentence. 
+- *Bad:* "How to build auth?"
+- *Elite:* "Should we implement custom JWT logic or extend the existing OAuth2 provider?"
 
-1.  **SKEPTIC (Fault-Finder)**: Focus ONLY on risks and assumptions. Format: `Risk: [X] - [Impact]`. No solutions allowed.
-2.  **MINIMALIST (Addition-Challenger)**: Cite concrete existing code that could be extended instead. Only accept new files if extension is impossible.
-3.  **MAINTAINER (Horizon-Scanner)**: Evaluate 2-year debt, testability, and clarity for the next developer.
+## Phase 2: Assemble the Siege Team
+Select 3 specialized perspectives (Zeus picks based on task):
+- **1. Auditor (Mandatory):** Minimalist (YAGNI), Skeptic (Security), or Maintainer (Debt).
+- **2. Contextual Expert:** Hacker (Security), UX (UI), or Ops (Deployment).
+- **3. The "Opponent":** The role that would naturally hate the proposed choice.
 
-## Synthesis Protocol
-Re-read roles in reverse (Maintainer &rarr; Minimalist &rarr; Skeptic) then synthesize:
-- **Agreement**: Must be addressed in revised design.
-- **Conflict**: Skeptic + Maintainer agreement trumps Minimalist.
-- **Revised Direction**: 2-4 sentences incorporating all surviving critiques.
+## Phase 3: The Single-Voice Round
+Each role speaks once. 3 sentences max.
+- **Values:** What they protect.
+- **Concern:** The specific point of failure.
+- **Lost Ground:** What we lose if we pick Option A over B.
+
+## Phase 4: Exit Logic
+Synthesize into one of three states:
+1.  **PROCEED:** Move to `brainstorming`.
+2.  **REFRAME:** Decision is flawed; restart deliberation with new framing.
+3.  **ABORT:** Violates YAGNI/Security; return to `premise-check`.
 
 ## Rationalization Table
 
 | Temptation | Risk |
 | :--- | :--- |
-| "I've already decided on the design" | Confirmation bias leads to expensive architectural debt. |
-| "Minimalist is being too strict" | Every line of code is a liability. Keep the footprint small. |
-| "Skip roles for speed" | A 5-min role-play saves a 5-hour refactor next month. |
-
-## Exit Criteria
-User approval of the **Revised Direction**. Max 2 self-rejection cycles.
+| "I'll just agree with the user" | Mediocre architecture. High regression risk. |
+| "Skip to the design" | Design without deliberation is just guessing. |
