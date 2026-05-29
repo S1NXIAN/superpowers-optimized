@@ -9,7 +9,7 @@ Modularize `agent/zeus.md` into a Router-Workflow architecture (ZEUS.md, FAST_PA
 - Instructions will be dynamically loaded via `skill()` invocation to improve context efficiency.
 
 ## Plan Status
-- Spec written and approved: `docs/superpowers/specs/2026-05-29-zeus-modularization-design.md`
+- Spec written and approved: `docs/zeus/specs/2026-05-29-zeus-modularization-design.md`
 - Implementation plan written: `docs/plans/2026-05-29-zeus-modularization.md`
 - Execution: **Pending** (Paused for pivot).
 

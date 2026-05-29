@@ -84,7 +84,7 @@ function preflight() {
     const config = readJson(CONFIG_JSON_PATH);
     if (config) {
       const plugins = config.plugin || [];
-      if (plugins.some(p => p.includes('superpowers'))) {
+      if (plugins.some(p => p.includes('zeus'))) {
         con.outOk('Zeus Elite plugin declared in opencode.json');
       } else {
         con.outWarn('Zeus Elite plugin not found in opencode.json plugin array');

@@ -37,7 +37,7 @@ Zeus Elite officially removes all support for Windows (PowerShell/CMD).
 - All `.ps1` files and Windows-specific path-handling code will be deleted.
 
 ## 4. Success Criteria
-- **Zero Dependencies**: `superpowers` plugin removed from `opencode.json`.
+- **Zero Dependencies**: `zeus` plugin removed from `opencode.json`.
 - **Instruction Sovereignty**: All markdown files reflect "Zeus Elite" standards.
 - **Performance Boost**: System tools (`rg`, `fd`) are available and utilized by the orchestrator.
 

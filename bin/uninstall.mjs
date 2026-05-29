@@ -4,7 +4,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-  SUPERPOWERS_PLUGIN, SKILLS_PATH, CONFIG_DIR, CONFIG_JSON_PATH,
+  ZEUS_PLUGIN, SKILLS_PATH, CONFIG_DIR, CONFIG_JSON_PATH,
   BACKUP_PARENT, MANAGED_FILES, MANAGED_DIRS
 } from '../lib/constants.mjs';
 import { createConsole } from '../lib/console.mjs';
@@ -29,7 +29,7 @@ function showHelp() {
   console.log('  --dry-run     Show what would change; don\'t touch anything');
   console.log('  --help        Show this help and exit\n');
   console.log(`${c(BOLD, 'What it does:')}`);
-  console.log('  1. Removes superpowers entries from opencode.json');
+  console.log('  1. Removes zeus entries from opencode.json');
   console.log('  2. Removes managed files and directories from ~/.config/opencode/');
   console.log('  3. Restores previous versions from the most recent backup');
   process.exit(0);
@@ -66,7 +66,7 @@ function backupFileSource(backupPath, configRelPath) {
 function planJsonRevert(config) {
   const changes = [];
   const plugins = config.plugin || [];
-  const pluginIndex = plugins.indexOf(SUPERPOWERS_PLUGIN);
+  const pluginIndex = plugins.indexOf(ZEUS_PLUGIN);
   if (pluginIndex !== -1) {
     const newPlugins = [...plugins];
     newPlugins.splice(pluginIndex, 1);
@@ -250,7 +250,7 @@ function verify(restoredPaths = []) {
   const config = existsSync(CONFIG_JSON_PATH) ? readJson(CONFIG_JSON_PATH) : null;
   if (config) {
     const plugins = config.plugin || [];
-    if (plugins.some(p => p === SUPERPOWERS_PLUGIN)) { con.outError('opencode.json still has superpowers plugin'); verifyFailed = true; }
+    if (plugins.some(p => p === ZEUS_PLUGIN)) { con.outError('opencode.json still has zeus plugin'); verifyFailed = true; }
     else con.outOk('Zeus Elite plugin removed from opencode.json');
 
     if (config.default_agent === 'zeus') { con.outError('default_agent still set to zeus'); verifyFailed = true; }
@@ -308,7 +308,7 @@ async function main() {
   const restores = planBackupRestores(backupPath, configChanges, fileRemovals, dirRemovals);
 
   if (configChanges.length === 0 && fileRemovals.length === 0 && dirRemovals.length === 0) {
-    con.outInfo('No superpowers-managed files found. Nothing to uninstall.');
+    con.outInfo('No zeus-managed files found. Nothing to uninstall.');
     process.exit(0);
   }
 

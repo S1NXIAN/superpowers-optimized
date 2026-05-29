@@ -33,8 +33,8 @@ git commit -m "chore: remove Windows support and .ps1 assets"
 - Modify: `opencode.json`
 - Modify: `templates/opencode-template.json`
 
-- [ ] **Step 1: Remove SUPERPOWERS_PLUGIN from constants**
-- [ ] **Step 2: Remove superpowers plugin from config files**
+- [ ] **Step 1: Remove ZEUS_PLUGIN from constants**
+- [ ] **Step 2: Remove zeus plugin from config files**
 - [ ] **Step 3: Commit**
 ```bash
 git add .
@@ -111,16 +111,16 @@ git commit -m "feat: implement modular FAST_PATH and FULL_PATH skills"
 ### Task 3: Import/Upgrade Elite Skill Pack
 
 **Files:**
-- Create: `skills/superpowers/PREMISE_CHECK.md`
-- Create: `skills/superpowers/SELF_CONSISTENCY.md`
-- Create: `skills/superpowers/ERROR_RECOVERY.md`
-- Create: `skills/superpowers/SDD.md`
-- Create: `skills/superpowers/DEPS.md`
+- Create: `skills/zeus/PREMISE_CHECK.md`
+- Create: `skills/zeus/SELF_CONSISTENCY.md`
+- Create: `skills/zeus/ERROR_RECOVERY.md`
+- Create: `skills/zeus/SDD.md`
+- Create: `skills/zeus/DEPS.md`
 
 - [ ] **Step 1: Import skills from opencode-zeus references**
 - [ ] **Step 2: Commit**
 ```bash
-git add skills/superpowers
+git add skills/zeus
 git commit -m "feat: import Elite Skill Pack (Premise, Consistency, SDD, recovery)"
 ```
 

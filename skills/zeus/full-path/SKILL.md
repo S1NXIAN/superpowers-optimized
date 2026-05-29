@@ -23,7 +23,7 @@ Dispatch `architect` and `hacker` sub-agents to siege the high-level approach.
 **Parallel Rule:** Dispatch both simultaneously in a single Turn.
 
 ### Phase 3: Brainstorming & Spec Approval
-Invoke `brainstorming`. Explore requirements. Produce the Design Doc in `docs/superpowers/specs/`. 
+Invoke `brainstorming`. Explore requirements. Produce the Design Doc in `docs/zeus/specs/`. 
 **Requirement:** Failure-mode check (adversarial reasoning) before approval.
 
 ### Phase 4: Implementation Planning
