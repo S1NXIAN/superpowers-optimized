@@ -38,7 +38,7 @@ The `<available_skills>` block in context lists every skill with its `descriptio
 3. **Follow Integration chains.** Each skill's Integration section lists skills that should run before or after. Load those too.
 4. **Resolve conflicts.** If multiple skills match, load all of them. Order by Integration dependencies.
 
-**`@quick` hint:** Task is simple and well-understood. Minimize loaded skills.
+**`@quick` hint:** Task is trivial and well-understood (single file, clear spec, no architecture decisions). **Go Direct Path** — skip the pipeline entirely. Load only `security-triage` + `token-efficiency`, then just write the code. No brainstorming, no writing-plans, no subagent dispatch.
 **`@full` hint:** Task is complex or high-risk. Load every relevant skill.
 
 ## Skill Pipeline (The Team)
@@ -46,6 +46,12 @@ The `<available_skills>` block in context lists every skill with its `descriptio
 Skills form a coherent engineering pipeline. Load only the skills relevant to your current stage:
 
 ```
+                            ┌─────────────────────────┐
+                            │      DIRECT PATH        │
+                            │ Trivial tasks only:     │
+                            │ Write code immediately  │
+                            └─────────────────────────┘
+
 Request → premise-check ─ACCEPT→ deliberation-gate ─PROCEED→ brainstorming
                 │                      │                          │
             ABORT←┘                REFRAME←┘                 pre-mortem
@@ -73,6 +79,16 @@ Request → premise-check ─ACCEPT→ deliberation-gate ─PROCEED→ brainstor
 - `systematic-debugging` — when bugs appear
 - `retrospective` — after incidents
 - `pre-mortem` — before risky work
+
+### Direct Path Conditions
+
+Use the Direct Path when ALL conditions are met:
+1. **Task is well-understood** — no ambiguity about what to build, user gave clear spec
+2. **Small scope** — single file or ≤3 tightly-coupled files (e.g., single HTML, one module + test)
+3. **No architecture decisions** — no framework choice, no database, no API design
+4. **No debugging** — no bugs to find, no test failures to investigate
+
+When these conditions are met: **do not load brainstorming, writing-plans, or dispatch subagents.** Just load `security-triage`, `token-efficiency`, then write the code directly. TDD still applies (Iron Rule 2), but at the inline level — RED→GREEN in the actual file, not via separate plan documents.
 
 ## Efficient Loading
 
@@ -120,14 +136,15 @@ Route to `small_model` for: isolated functions, clear specs, 1-2 file changes, m
 |---|---|---|
 | "I'll skip the skill, I know what it says" | Skills evolve. Invoke them. |
 | "This task doesn't need a skill" | If a description matches, it's needed. Load it. |
-| "I'll implement this myself instead of dispatching" | Implementation code bloats my context. Dispatch a subagent with a fresh window. |
-| "Dispatching takes more turns than doing it myself" | Subagents work in parallel with full context. The cost is worth the token isolation. |
+| "I'll implement this myself instead of dispatching" | Depends. **Trivial Direct Path** work → write it inline. **Complex** multi-file work → dispatch a subagent with a fresh window. Blind dispatch wastes tokens on trivial tasks. |
+| "Dispatching takes more turns than doing it myself" | For complex work, subagents work in parallel with full context. The cost is worth the token isolation. For trivial tasks, just write it directly. |
 
 ## Red Flags — STOP
 
 - Forgetting to invoke `token-efficiency` at session start
 - Skipping `security-triage` on any file
 - Reading a skill file directly instead of using the Skill tool
-- Implementing yourself when a subagent should handle the work (code in my context = wasted tokens)
+- Loading brainstorming/writing-plans/subagents for a trivial Direct Path task
+- Dispatching a subagent for something you could write in 30 seconds inline
 - Making completion claims without fresh verification evidence
 - Assuming a skill still says what you remember (re-read it)

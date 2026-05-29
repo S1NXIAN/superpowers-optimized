@@ -86,7 +86,8 @@ Catch yourself thinking any of these? STOP. You're about to violate the rules.
 
 - About to write code without a failing test
 - About to skip security triage on a file
-- About to implement instead of dispatching a subagent
+- About to dispatch a subagent for a trivial 1-file task (Direct Path violation)
+- About to implement complex multi-file work yourself instead of dispatching (wastes context)
 - About to claim completion without running verification
 - About to fix a bug without finding the root cause
 - About to add code "just in case" (YAGNI violation)
