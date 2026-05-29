@@ -16,8 +16,8 @@ Maximum Firepower. Parallel Force.
 1.  **WAVE Grouping:** Parse the `plan.md` and group tasks by file-disjointness.
  2.  **Strike Handoff:** Use the subagent's system prompt as the Task tool prompt.
 3.  **Two-Stage Review Gate:**
-    - **Stage 1 (Spec):** `spec-reviewer` confirms implementation matches plan.
-    - **Stage 2 (Quality):** `code-quality` checks for technical debt and SNR.
+    - **Stage 1 (Spec):** `spec-validation` confirms implementation matches plan.
+    - **Stage 2 (Quality):** `quality-review` checks for technical debt and SNR.
 4.  **Wave Integration:** Run the full project test suite after the Wave is complete.
 
 ## Agent Hygiene

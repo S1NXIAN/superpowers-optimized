@@ -42,11 +42,11 @@ On `CRITICAL` signatures (verified via `skills.sh audit`), dispatch the speciali
 
 | Subagent | Role | When |
 |---|---|---|
-| `@hacker` | Penetration and break-testing | Security-critical or auth-related changes |
-| `@architect` | Structural boundaries and SOLID | Cross-module or API changes |
-| `@designer` | UI/UX, accessibility, visual hierarchy | Any frontend or UI work |
-| `@qa-pro` | Exhaustive edge-case verification | Always — all changes |
-| `@cleaner` | DRY and technical debt elimination | Always — on completion |
+| `@security-audit` | Penetration and break-testing | Security-critical or auth-related changes |
+| `@structure-review` | Structural boundaries and SOLID | Cross-module or API changes |
+| `@design-review` | UI/UX, accessibility, visual hierarchy | Any frontend or UI work |
+| `@verification` | Exhaustive edge-case verification | Always — all changes |
+| `@code-cleanup` | DRY and technical debt elimination | Always — on completion |
 
 **Parallel Rule:** Dispatch all relevant subagents simultaneously in a single turn using the Task tool. Each subagent gets a focused prompt with the specific files and concern.
 

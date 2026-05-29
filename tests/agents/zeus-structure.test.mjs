@@ -32,11 +32,11 @@ describe('Zeus 2.0 Elite Modular Architecture', () => {
 
     describe('Strike Team Dispatch', () => {
       it('Has Strike Team section', () => assert.ok(zeusContent.includes('Strike Team Dispatch')));
-      it('References subagents (hacker, architect, designer, etc.)', () => {
-        assert.ok(zeusContent.includes('@hacker'));
-        assert.ok(zeusContent.includes('@architect'));
-        assert.ok(zeusContent.includes('@qa-pro'));
-        assert.ok(zeusContent.includes('@cleaner'));
+      it('References subagents by process names', () => {
+        assert.ok(zeusContent.includes('@security-audit'));
+        assert.ok(zeusContent.includes('@structure-review'));
+        assert.ok(zeusContent.includes('@verification'));
+        assert.ok(zeusContent.includes('@code-cleanup'));
       });
       it('Uses token-efficiency at session start', () => assert.ok(zeusContent.includes('Invoke `token-efficiency` at session start')));
     });
