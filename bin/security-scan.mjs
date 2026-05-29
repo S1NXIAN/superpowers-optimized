@@ -61,6 +61,8 @@ function loadT2CommonPatterns() {
   return loadPatternLines(join(PATTERNS_DIR, 'common.txt'));
 }
 
+const _patternCache = new Map();
+
 function loadT2LanguagePatterns(ext) {
   const langMap = {
     '.js': 'js-node.txt', '.jsx': 'js-node.txt',
@@ -83,7 +85,11 @@ function loadT2LanguagePatterns(ext) {
   };
   const file = langMap[ext];
   if (!file) return [];
-  return loadPatternLines(join(PATTERNS_DIR, file));
+  const filePath = join(PATTERNS_DIR, file);
+  if (!_patternCache.has(filePath)) {
+    _patternCache.set(filePath, loadPatternLines(filePath));
+  }
+  return _patternCache.get(filePath);
 }
 
 function loadT3Patterns() {

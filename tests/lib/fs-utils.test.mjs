@@ -10,7 +10,6 @@ import {
   writeJson,
   copyFileChecked,
   copyDirRecursive,
-  copyDir,
   backupFile,
   backupDirContent,
   ensureBackupDir,
@@ -119,16 +118,7 @@ describe('lib/fs-utils', () => {
       assert.equal(readFileSync(join(dest, 'sub', 'file2.txt'), 'utf8'), 'f2');
     });
 
-    it('copyDir returns true when dir copied', () => {
-      const src = join(tempDir, 'src');
-      const dest = join(tempDir, 'dest');
-      mkdirSync(src);
-      writeFileSync(join(src, 'file.txt'), 'f1');
 
-      const success = copyDir(src, dest, {});
-      assert.equal(success, true);
-      assert.equal(existsSync(join(dest, 'file.txt')), true);
-    });
   });
 
   describe('Backups', () => {

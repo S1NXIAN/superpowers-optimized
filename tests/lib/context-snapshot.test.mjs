@@ -5,14 +5,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { execSync } from 'node:child_process';
 import { buildSnapshot, validateSnapshot, cli } from '../../lib/context-snapshot.mjs';
-
-function createGitRepo(dir) {
-  execSync('git init', { cwd: dir, stdio: 'pipe' });
-  execSync('git config user.email test@test.com', { cwd: dir, stdio: 'pipe' });
-  execSync('git config user.name Test', { cwd: dir, stdio: 'pipe' });
-  writeFileSync(join(dir, 'README.md'), '# test');
-  execSync('git add . && git commit -m "init"', { cwd: dir, stdio: 'pipe' });
-}
+import { createGitRepo } from '../helpers.mjs';
 
 describe('lib/context-snapshot', () => {
   describe('buildSnapshot()', () => {
@@ -38,6 +31,24 @@ describe('lib/context-snapshot', () => {
       const dir = mkdtempSync(join(tmpdir(), 'cs-test-'));
       const result = buildSnapshot(dir);
       assert.equal(result, null);
+    });
+
+    it('skips blast radius when there are more than 10 changed files', () => {
+      const dir = mkdtempSync(join(tmpdir(), 'cs-test-'));
+      createGitRepo(dir);
+      // Create 11 changed files in a commit
+      for (let i = 0; i < 11; i++) {
+        writeFileSync(join(dir, `file${i}.js`), `// file ${i}`);
+      }
+      execSync('git add . && git commit -m "add 11 files"', { cwd: dir, stdio: 'pipe' });
+
+      const result = buildSnapshot(dir);
+      assert.ok(result);
+      assert.equal(result.changed_files.length, 11);
+      // Verify all blast radius arrays are empty
+      for (let i = 0; i < 11; i++) {
+        assert.deepEqual(result.blast_radius[`file${i}.js`], []);
+      }
     });
   });
 

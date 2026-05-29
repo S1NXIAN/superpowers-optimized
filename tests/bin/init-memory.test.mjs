@@ -4,6 +4,7 @@ import { readFileSync, existsSync, mkdtempSync, mkdirSync, writeFileSync } from 
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { execSync } from 'node:child_process';
+import { createGitRepo } from '../helpers.mjs';
 
 const BIN = new URL('../../bin/init-memory.mjs', import.meta.url).pathname;
 
@@ -13,16 +14,6 @@ function runScript(cwd, args = []) {
     encoding: 'utf8',
     stdio: 'pipe',
   });
-}
-
-function createGitRepo(dir) {
-  execSync('git init', { cwd: dir, stdio: 'pipe' });
-  execSync('git config user.email test@test.com', { cwd: dir, stdio: 'pipe' });
-  execSync('git config user.name Test', { cwd: dir, stdio: 'pipe' });
-  writeFileSync(join(dir, 'README.md'), '# test');
-  mkdirSync(join(dir, 'src'), { recursive: true });
-  writeFileSync(join(dir, 'src', 'index.js'), '// entry');
-  execSync('git add . && git commit -m "init"', { cwd: dir, stdio: 'pipe' });
 }
 
 describe('bin/init-memory', () => {

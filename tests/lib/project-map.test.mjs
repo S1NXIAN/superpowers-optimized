@@ -5,14 +5,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { execSync } from 'node:child_process';
 import { isMapStale, generateMap, truncateMap, parseMapHash } from '../../lib/project-map.mjs';
-
-function createGitRepo(dir) {
-  execSync('git init', { cwd: dir, stdio: 'pipe' });
-  execSync('git config user.email test@test.com', { cwd: dir, stdio: 'pipe' });
-  execSync('git config user.name Test', { cwd: dir, stdio: 'pipe' });
-  writeFileSync(join(dir, 'README.md'), '# test');
-  execSync('git add . && git commit -m "init"', { cwd: dir, stdio: 'pipe' });
-}
+import { createGitRepo } from '../helpers.mjs';
 
 describe('lib/project-map', () => {
   describe('parseMapHash()', () => {

@@ -1,29 +1,12 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { writeFileSync, readFileSync, mkdtempSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdtempSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { execSync } from 'node:child_process';
+import { createGitRepo, ensureMemDir } from '../helpers.mjs';
 
 const BIN = new URL('../../bin/staleness-check.mjs', import.meta.url).pathname;
-
-function createGitRepo(dir, extraCommit = false) {
-  execSync('git init', { cwd: dir, stdio: 'pipe' });
-  execSync('git config user.email test@test.com', { cwd: dir, stdio: 'pipe' });
-  execSync('git config user.name Test', { cwd: dir, stdio: 'pipe' });
-  writeFileSync(join(dir, 'README.md'), '# test');
-  execSync('git add . && git commit -m "init"', { cwd: dir, stdio: 'pipe' });
-  if (extraCommit) {
-    writeFileSync(join(dir, 'extra.js'), '// extra');
-    execSync('git add . && git commit -m "extra"', { cwd: dir, stdio: 'pipe' });
-  }
-}
-
-function ensureMemDir(dir) {
-  const mem = join(dir, 'zeus', 'memory');
-  mkdirSync(mem, { recursive: true });
-  return mem;
-}
 
 function run(dir, args = []) {
   return execSync(`node ${BIN} ${args.join(' ')}`, {

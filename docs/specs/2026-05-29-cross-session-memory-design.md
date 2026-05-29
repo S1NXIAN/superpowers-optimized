@@ -93,7 +93,7 @@ Generated: 2026-05-28 | Git: a4b9c2d
 - No `zeus/memory/` dir: Zeus creates it silently on first session init.
 - No git: skip snapshot entirely. Zeus proceeds without it.
 - No hook: zeus fallback handles it (adds ~1 tool call overhead).
-- No `rg` for blast radius: skip blast radius, still populate other fields.
+- No `rg` for blast radius: fallback to native `grep` with Jaccard-like file patterns. If both unavailable, skip blast radius and populate other fields.
 - Snapshot stale (hash mismatch): zeus rebuilds.
 
 **Format:**

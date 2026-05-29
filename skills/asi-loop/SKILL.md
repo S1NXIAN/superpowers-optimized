@@ -1,9 +1,9 @@
 ---
 name: asi-loop
-description: "Fix one overlapping-code issue per cycle. Required when 3+ issues share a file. State via skills/asi-loop/scripts/asi.sh. TDD with reproducer first. Use when multiple fixes risk merge conflicts, regressions, or nullification."
+description: "Fix one overlapping-code issue per cycle. Required when 3+ issues share a file. State via scripts/asi.sh. TDD with reproducer first. Use when multiple fixes risk merge conflicts, regressions, or nullification."
 ---
 # ASI Loop — One-Issue-at-a-Time Patching
-Overlapping fixes cause merge conflicts and nullified fixes. Fix **one** issue per cycle. All state operations use `skills/asi-loop/scripts/asi.sh` – **never** read or write `.asi-state.json` directly.
+Overlapping fixes cause merge conflicts and nullified fixes. Fix **one** issue per cycle. All state operations use `scripts/asi.sh` – **never** read or write `.asi-state.json` directly.
 
 ## State Commands (use exactly)
 | Action | Command |
@@ -20,7 +20,7 @@ Overlapping fixes cause merge conflicts and nullified fixes. Fix **one** issue p
 | Increment cycle | `asi.sh complete-cycle` |
 | Validate | `asi.sh check-corrupt` |
 
-Path: `skills/asi-loop/scripts/asi.sh`. If relative resolution fails, find the script co-located with this skill file.
+Path: `scripts/asi.sh` (with backward-compatibility wrapper at `skills/asi-loop/scripts/asi.sh`).
 
 ## Cycle Output Block (required before each fix)
 ```

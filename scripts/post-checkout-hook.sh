@@ -55,4 +55,7 @@ fi
 # ---------------------------------------------------------------------------
 # Build and write snapshot via the library (single call, zero logic dup)
 # ---------------------------------------------------------------------------
-"$NODE" "$LIB_SCRIPT" --write "$PROJECT_ROOT" &>/dev/null || true
+if ! output=$("$NODE" "$LIB_SCRIPT" --write "$PROJECT_ROOT" 2>&1); then
+  echo "WARNING (opencode-zeus): failed to write context snapshot:" >&2
+  echo "$output" | while read -r line; do echo "  $line" >&2; done
+fi

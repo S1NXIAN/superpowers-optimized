@@ -9,7 +9,7 @@ import {
 } from '../lib/constants.mjs';
 import { createConsole } from '../lib/console.mjs';
 import {
-  readJson, writeJson, copyFileChecked, copyDir,
+  readJson, writeJson, copyFileChecked, copyDirRecursive,
   backupFile, backupDirContent, ensureBackupDir, gitAvailable, getGitDiff
 } from '../lib/fs-utils.mjs';
 import { validateConfig } from '../lib/config-schema.mjs';
@@ -242,7 +242,7 @@ function installFiles(fileChanges, dirChanges) {
   for (const dc of dirChanges) {
     backupDir = ensureBackupDir(join(CONFIG_DIR, '.backups'));
     backupDirContent(dc.configRel, CONFIG_DIR, backupDir);
-    if (copyDir(dc.src, dc.dest, { dryRun: dryRunMode })) {
+    if (copyDirRecursive(dc.src, dc.dest, { dryRun: dryRunMode })) {
       con.outOk(`Synced ${dc.configRel}/`);
     }
   }

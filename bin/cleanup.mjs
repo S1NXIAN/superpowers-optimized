@@ -17,18 +17,12 @@
 import { existsSync, rmSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createConsole } from '../lib/console.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_DIR = join(__dirname, '..');
-
-// Terminal styling
-const useColor = process.stdout.isTTY;
-const BOLD = '\x1b[1m', DIM = '\x1b[2m', RED = '\x1b[31m';
-const GREEN = '\x1b[32m', YELLOW = '\x1b[33m', BLUE = '\x1b[34m', RESET = '\x1b[0m';
-function c(code, s) { return useColor ? `${code}${s}${RESET}` : s; }
-const ok   = (msg) => console.log(`  ${c(GREEN, '\u2713')} ${msg}`);
-const info = (msg) => console.log(`  ${c(BLUE, '\u2022')} ${msg}`);
-const warn = (msg) => console.log(`  ${c(YELLOW, '\u26A0')} ${msg}`);
+const con = createConsole(process.stdout.isTTY);
+const { c, BOLD, DIM, RED } = con;
 
 let dryRunMode = false;
 
@@ -64,7 +58,7 @@ function showHelp() {
   console.log('  --dry-run     Show what would be deleted; don\'t touch anything');
   console.log('  --help        Show this help and exit\n');
   console.log(`${c(BOLD, 'Cleans:')}`);
-  for (const a of ARTIFACTS) info(`${a.label}  (${a.rel})`);
+  for (const a of ARTIFACTS) con.outInfo(`${a.label}  (${a.rel})`);
   process.exit(0);
 }
 
@@ -74,7 +68,7 @@ function parseArgs() {
     if (arg === '--help') showHelp();
     else if (arg === '--dry-run') dryRunMode = true;
     else {
-      console.error(`${c(RED, 'Unknown option:')} ${arg}`);
+      con.outError(`${c(RED, 'Unknown option:')} ${arg}`);
       showHelp();
     }
   }
@@ -90,16 +84,16 @@ function main() {
 
   const present = ARTIFACTS.filter(a => exists(a.rel));
   if (present.length === 0) {
-    info('Nothing to clean. All artifact paths already empty or missing.');
+    con.outInfo('Nothing to clean. All artifact paths already empty or missing.');
     return;
   }
 
-  info('Found:');
-  for (const a of present) info(`${a.label}  (${a.rel})`);
+  con.outInfo('Found:');
+  for (const a of present) con.outInfo(`${a.label}  (${a.rel})`);
   console.log('');
 
   if (dryRunMode) {
-    ok(`${c(BOLD, 'Dry run complete.')} Nothing was deleted.`);
+    con.outOk(`${c(BOLD, 'Dry run complete.')} Nothing was deleted.`);
     return;
   }
 
@@ -109,11 +103,11 @@ function main() {
     const full = join(REPO_DIR, a.rel);
     if (a.type === 'dir') rmSync(full, { recursive: true, force: true });
     else rmSync(full, { force: true });
-    ok(`Removed ${a.label}  (${a.rel})`);
+    con.outOk(`Removed ${a.label}  (${a.rel})`);
     count++;
   }
 
-  if (count > 0) ok(`${c(BOLD, `Done. Removed ${count} artifact(s).`)}`);
+  if (count > 0) con.outOk(`${c(BOLD, `Done. Removed ${count} artifact(s).`)}`);
 }
 
 try {
