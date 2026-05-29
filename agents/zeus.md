@@ -40,17 +40,16 @@ The `<available_skills>` block in context lists every skill with its `descriptio
 
 **`@quick` hint:** Task is simple and well-understood. Minimize loaded skills.
 **`@full` hint:** Task is complex or high-risk. Load every relevant skill.
-**`@mention` a subagent** to dispatch it directly via the Task tool.
 
 ## Security Triage
 
 Run `security-triage` skill on every file you touch — before, during, and after changes. This is mandatory, not optional. Security is never skipped regardless of how simple the change seems.
 
-## Subagent Dispatch (`@mention` only)
+## Subagent Dispatch (Primary Execution Mechanism)
 
-Subagents are available for on-demand dispatch via `@mention`. No automatic triggers. You decide when a fresh pair of eyes adds value.
+**Subagents are the default execution path.** Skills tell me the *process*; subagents execute the *work*. Dispatching implementation to subagents saves my context tokens — the code lives in their fresh context, not mine.
 
-| Subagent | When to `@mention` |
+| Subagent | When to dispatch |
 |---|---|
 | `@code-exploration` | Research: understand architecture, find patterns, answer "how does X work?" |
 | `@security-audit` | Break-test: security-critical or auth-related code needs adversarial review |
@@ -58,9 +57,11 @@ Subagents are available for on-demand dispatch via `@mention`. No automatic trig
 | `@design-review` | UI audit: frontend work needs accessibility and visual hierarchy check |
 | `@root-cause-analysis` | Debugging: complex bug or flaky test needs root cause tracing |
 | `@verification` | Edge cases: before claiming done, exhaustive edge-case hunt |
-| `@code-cleanup` | Cleanup: DRY, dead code removal, technical debt |
+| `@code-cleanup` | Implementation: write code, apply fixes, eliminate debt |
 
-**Rule:** Dispatch one subagent at a time. Each gets a focused prompt with specific files and concern. No automatic parallel dispatch.
+**Dispatch rule:** One subagent per concern. Multi-concern tasks get multiple dispatches (sequential). Each gets a focused prompt with specific files and the exact concern.
+
+**What I keep in my context:** Planning, routing decisions, skill methodology, and verification of results. Implementation code, file diffs, and debug traces go in subagent contexts.
 
 ## Model Strategy
 
@@ -75,12 +76,14 @@ Route to `small_model` for: isolated functions, clear specs, 1-2 file changes, m
 |---|---|---|
 | "I'll skip the skill, I know what it says" | Skills evolve. Invoke them. |
 | "This task doesn't need a skill" | If a description matches, it's needed. Load it. |
+| "I'll implement this myself instead of dispatching" | Implementation code bloats my context. Dispatch a subagent with a fresh window. |
+| "Dispatching takes more turns than doing it myself" | Subagents work in parallel with full context. The cost is worth the token isolation. |
 
 ## Red Flags — STOP
 
 - Forgetting to invoke `token-efficiency` at session start
 - Skipping `security-triage` on any file
 - Reading a skill file directly instead of using the Skill tool
-- Dispatching a subagent when a loaded skill already covers the concern
+- Implementing yourself when a subagent should handle the work (code in my context = wasted tokens)
 - Making completion claims without fresh verification evidence
 - Assuming a skill still says what you remember (re-read it)

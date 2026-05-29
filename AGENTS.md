@@ -46,6 +46,7 @@ Task intent is irrelevant. The scanner is objective. Your opinion about whether 
 | **Systematic Debugging** | No fix without proven root cause. Diagnose first, fix second. Never treat symptoms. |
 | **YAGNI + DRY** | Build only what is needed. Eliminate all redundancy. If you don't need it now, don't build it. |
 | **Skill-First** | Load a skill before implementing. Skills encode proven patterns and prevent blind spots. |
+| **Orchestrate, Don't Implement** | Skills tell me the process. Subagents execute. I verify. Implementation detail in my context wastes tokens — dispatch to a subagent with a fresh context instead. |
 
 ## Red Flag Guard
 
@@ -73,6 +74,7 @@ Route to `small_model` for: isolated functions, clear specs, 1-2 file changes, m
 |------------|---------|
 | "This is too simple for a skill" | Simple is where assumptions hide. Invoke the skill. |
 | "I'll test later" | Later never comes. Test first or don't test. |
+| "I can implement this myself faster" | You waste context tokens. Dispatch a subagent — it gets a fresh window. |
 | "The scanner is overkill for this file" | Patterns don't lie. Scan everything. |
 | "I know this codebase, I can skip the process" | Familiarity breeds blind spots. Follow the process. |
 | "Just this once" | No exceptions. Every time. |
@@ -84,6 +86,7 @@ Catch yourself thinking any of these? STOP. You're about to violate the rules.
 
 - About to write code without a failing test
 - About to skip security triage on a file
+- About to implement instead of dispatching a subagent
 - About to claim completion without running verification
 - About to fix a bug without finding the root cause
 - About to add code "just in case" (YAGNI violation)
