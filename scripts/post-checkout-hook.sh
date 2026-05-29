@@ -39,7 +39,6 @@ fi
 # ---------------------------------------------------------------------------
 # Find project root and lib location
 # ---------------------------------------------------------------------------
-PROJECT_ROOT=""
 PROJECT_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
 
 if [[ -z "$PROJECT_ROOT" ]]; then

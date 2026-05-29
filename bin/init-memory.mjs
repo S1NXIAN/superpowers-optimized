@@ -10,7 +10,7 @@
  */
 
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { generateMap } from '../lib/project-map.mjs';
 import { buildSnapshot } from '../lib/context-snapshot.mjs';
@@ -41,11 +41,11 @@ function parseArgs() {
   return opts;
 }
 
-function wrote(label, path) {
+function wrote(label) {
   console.log(`  ${'created'} ${label}`);
 }
 
-function skipped(label, path) {
+function skipped(label) {
   console.log(`  ${'skipped'} ${label} (exists, use --force to overwrite)`);
 }
 
@@ -57,19 +57,19 @@ function createMemoryDir(dryRun) {
 function writeProjectMap(dryRun, force) {
   const path = join(MEMORY_DIR, 'project-map.md');
   if (existsSync(path) && !force) {
-    skipped('project-map.md', path);
+    skipped('project-map.md');
     return;
   }
   if (dryRun) return;
   const content = generateMap(PROJECT_ROOT);
   writeFileSync(path, content, 'utf8');
-  wrote('project-map.md', path);
+  wrote('project-map.md');
 }
 
 function writeKnownIssues(dryRun, force) {
   const path = join(MEMORY_DIR, 'known-issues.md');
   if (existsSync(path) && !force) {
-    skipped('known-issues.md', path);
+    skipped('known-issues.md');
     return;
   }
   if (dryRun) return;
@@ -90,20 +90,20 @@ Format:
 
 `;
   writeFileSync(path, template, 'utf8');
-  wrote('known-issues.md', path);
+  wrote('known-issues.md');
 }
 
 function writeContextSnapshot(dryRun, force) {
   const path = join(MEMORY_DIR, 'context-snapshot.json');
   if (existsSync(path) && !force) {
-    skipped('context-snapshot.json', path);
+    skipped('context-snapshot.json');
     return;
   }
   if (dryRun) return;
   const snapshot = buildSnapshot(PROJECT_ROOT);
   if (snapshot) {
     writeFileSync(path, JSON.stringify(snapshot, null, 2) + '\n', 'utf8');
-    wrote('context-snapshot.json', path);
+    wrote('context-snapshot.json');
   } else {
     // Non-git project — write minimal stub
     const stub = {
@@ -145,6 +145,6 @@ export { main, parseArgs, MEMORY_DIR, PROJECT_ROOT, writeProjectMap, writeKnownI
 
 // Allow direct execution
 const THIS_FILE = fileURLToPath(import.meta.url);
-if (process.argv[1] && (process.argv[1] === THIS_FILE || process.argv[1].endsWith('init-memory.mjs'))) {
+if (process.argv[1] && (process.argv[1] === THIS_FILE || basename(process.argv[1]) === 'init-memory.mjs')) {
   main();
 }

@@ -261,8 +261,6 @@ function main() {
   const t2Common = loadT2CommonPatterns();
   const t3Patterns = loadT3Patterns();
 
-
-
   const allResults = [];
 
   for (const filePath of args) {
