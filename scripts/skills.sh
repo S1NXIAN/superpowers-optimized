@@ -75,7 +75,13 @@ get_audit_tags() {
 case "$COMMAND" in
     list)
         if [[ -d "skills" ]]; then
-            ls -F "skills/"
+            if command -v fd >/dev/null 2>&1; then
+                fd . "skills/" --max-depth 1 --type d --exec basename {}
+            elif command -v fdfind >/dev/null 2>&1; then
+                fdfind . "skills/" --max-depth 1 --type d --exec basename {}
+            else
+                ls -F "skills/"
+            fi
         else
             echo "Error: skills/ directory not found." >&2
             exit 1

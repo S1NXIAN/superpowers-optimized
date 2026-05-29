@@ -6,14 +6,13 @@
 #   bash <(curl -fsSL https://raw.githubusercontent.com/S1NXIAN/opencode-zeus/main/installers/install.sh)
 #
 # What it does:
-#   1. Detects OS and installs Node.js if missing
+#   1. Detects OS and installs Node.js, ripgrep, and fd if missing
 #   2. Downloads the repo as a tarball (no git required)
 #   3. Runs bin/setup.mjs --force
 #   4. Cleans up the temp directory
 #
-# Supports: Linux (apt, dnf, yum, pacman, zypper, apk), macOS (brew),
-#           Windows (Git Bash / MSYS2 / WSL). Falls back to downloading
-#           Node.js directly from nodejs.org on any platform.
+# Supports: Linux (apt, dnf, yum, pacman, zypper, apk), macOS (brew).
+#           Falls back to downloading Node.js directly from nodejs.org.
 # ===========================================================================
 
 set -euo pipefail
@@ -60,7 +59,6 @@ detect_os() {
   case "$uname_s" in
     Linux*)   echo "linux" ;;
     Darwin*)  echo "macos" ;;
-    MINGW*|MSYS*|CYGWIN*)  echo "windows" ;;
     *)        echo "unknown" ;;
   esac
 }
@@ -164,15 +162,10 @@ install_node_direct() {
   case "$OS" in
     linux)   node_os="linux" ;;
     macos)   node_os="darwin" ;;
-    windows) node_os="win" ;;
     *)       node_os="linux" ;;
   esac
 
-  if [[ "$node_os" == "win" ]]; then
-    node_ext="zip"
-  else
-    node_ext="tar.gz"
-  fi
+  node_ext="tar.gz"
 
   local node_dir="node-${NODE_VERSION_FALLBACK}-${node_os}-${ARCH}"
   local node_url="https://nodejs.org/dist/${NODE_VERSION_FALLBACK}/${node_dir}.${node_ext}"
@@ -180,18 +173,11 @@ install_node_direct() {
 
   download_file "$node_url" "$node_archive"
 
-  if [[ "$node_ext" == "zip" ]]; then
-    unzip -q "$node_archive" -d "$TMPDIR"
-  else
-    tar -xzf "$node_archive" -C "$TMPDIR"
-  fi
+  tar -xzf "$node_archive" -C "$TMPDIR"
 
   local node_bin="${TMPDIR}/${node_dir}/bin"
-  if [[ "$node_os" == "win" ]]; then
-    node_bin="${TMPDIR}/${node_dir}"
-  fi
 
-  if [[ -x "${node_bin}/node" || -f "${node_bin}/node.exe" ]]; then
+  if [[ -x "${node_bin}/node" ]]; then
     export PATH="${node_bin}:${PATH}"
     ok "Node.js ${NODE_VERSION_FALLBACK} ready (temporary, not permanently installed)"
   else
