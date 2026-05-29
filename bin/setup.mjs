@@ -37,6 +37,7 @@ function showHelp() {
   console.log('  3. Shows planned changes before applying');
   console.log('  4. Backs up existing files to ~/.config/opencode/.backups/<timestamp>/');
   console.log('  5. Copies repo files and skills into ~/.config/opencode/');
+  console.log('  6. Installs git post-checkout hook for automatic context snapshots');
   process.exit(0);
 }
 
@@ -247,6 +248,30 @@ function installFiles(fileChanges, dirChanges) {
   }
 }
 
+function installGitHook() {
+  if (dryRunMode) {
+    con.outInfo('Would install git post-checkout hook');
+    return;
+  }
+  const gitDir = join(REPO_DIR, '.git');
+  if (!existsSync(gitDir)) {
+    con.outSubdued('No .git directory — skipping git hook installation');
+    return;
+  }
+  const hookSrc = join(REPO_DIR, 'scripts', 'post-checkout-hook.sh');
+  const hookDest = join(gitDir, 'hooks', 'post-checkout');
+  if (!existsSync(hookSrc)) {
+    con.outWarn('post-checkout-hook.sh not found — skipping');
+    return;
+  }
+  try {
+    copyFileChecked(hookSrc, hookDest, { executable: true });
+    con.outOk('Installed .git/hooks/post-checkout');
+  } catch (err) {
+    con.outWarn(`Could not install git hook: ${err.message}`);
+  }
+}
+
 function verify() {
   con.outHeader('Verification');
   let verifyFailed = false;
@@ -333,6 +358,7 @@ async function main() {
   con.outHeader('Installing');
   installConfig(configChanges);
   installFiles(fileChanges, dirChanges);
+  installGitHook();
   const verified = verify();
 
   if (backupDir) con.outInfo(`Backups saved to ${backupDir}`);

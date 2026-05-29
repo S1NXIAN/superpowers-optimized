@@ -13,6 +13,11 @@ Thumbs.db
 .gemini/
 skills-lock.json
 
+# AI memory artifacts (cross-session state, auto-generated)
+.context-snapshot.json
+known-issues.md
+project-map.md
+
 # AI-generated design docs and implementation plans (scaffolding, not permanent)
 docs/superpowers/
 
