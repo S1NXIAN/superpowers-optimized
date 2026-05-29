@@ -1,4 +1,7 @@
-# Skill: zeus/full-path
+---
+name: zeus/full-path
+description: The complete 8-stage Elite engineering pipeline for complex tasks.
+---
 
 # Full Path Workflow (complex tasks)
 

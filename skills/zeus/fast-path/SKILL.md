@@ -1,4 +1,7 @@
-# Skill: zeus/fast-path
+---
+name: zeus/fast-path
+description: Optimized TDD workflow for simple tasks classified as Fast Path.
+---
 
 # Fast Path Workflow (simple tasks)
 
