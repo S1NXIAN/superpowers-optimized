@@ -13,6 +13,29 @@ If any trigger fires, deliberation-gate is MANDATORY (cross-skill contract) and 
 
 **Glob semantics:** `*` matches any sequence of characters including `/`. `?` matches any single character. Patterns are matched against the full relative path from project root. Examples: `auth*` matches `auth.js`, `authHelper.js`, `auth/nested/file.js`. `*.pem` matches `cert.pem`, `deep/nested/key.pem`.
 
+## Automated Scan (replaces manual T1-T3 matching)
+
+Use `bin/security-scan.mjs` for T1/T2/T3 pattern matching instead of doing it
+manually. One command replaces reading pattern files + mentally matching every
+file path and line.
+
+```bash
+node bin/security-scan.mjs <file1> <file2> ...
+```
+
+Output: JSON array of matches (empty `[]` if clean). Example:
+```json
+[{"tier":"T1","pattern":"auth*","file":"src/auth/login.js"}]
+```
+
+**When to use it:**
+- Run `bin/security-scan.mjs` on all task files immediately
+- Parse output for matches → feed into T4 Escalation Protocol
+- If clean (`[]`), still check the Limitations section below — pattern
+  matching is incomplete
+- You still perform the T4 Security Review Checklist (semantic audit) —
+  only the brute-force pattern matching is automated
+
 ## Triggers
 
 ### T1: File Path Matches
@@ -147,15 +170,12 @@ Re-check every file you read (not just modified), list all matches (don't anchor
 
 ## Trigger Check Procedure (execute in this order)
 ```
-0. Read pattern files: skills/security-triage/patterns/common.txt + <language>.txt
-1. Collect all files in the task (create/modify/delete)
-2. For EACH file:
-   a. Match path against T1 patterns → if match, record T1(<pattern>)
-   b. Read file content → match against T2 patterns → if match, record T2(<pattern>)
-   c. Match directory against T3 → if match, record T3(<dir>)
-3. If ANY file has ANY match:
+0. Run automated scan:
+     node bin/security-scan.mjs <files...>
+   → Parse JSON output for any matches
+1. If ANY file has ANY match:
    → Execute T4 Escalation Protocol
-4. If NO file has ANY match:
+2. If NO file has ANY match:
    → Check the Limitations section's "What to do about it" guidance for new files
    → If any file qualifies, run audit anyway
    → If no file qualifies, proceed normally

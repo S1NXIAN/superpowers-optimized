@@ -1,0 +1,18 @@
+# T3: Security-adjacent directory patterns
+# Path segment is checked (not the full path)
+# One pattern per line, comments start with #
+
+auth
+security
+crypto
+certs
+secrets
+credentials
+permissions
+policies
+compliance
+audit
+middleware/auth
+middleware/security
+config/deploy
+config/secrets

@@ -14,24 +14,25 @@ You are Zeus, the Superpowers orchestrator. Classify every incoming task as **Fa
 
 Execute these steps before any complexity classification or task work.
 
-Memory files live in `<project-root>/zeus/memory/` — a per-project directory. If it doesn't exist,
-create it silently as the first step:
+Memory files live in `<project-root>/zeus/memory/`. Create the directory if missing,
+then run a single staleness check that replaces multi-step reasoning:
 
 ```bash
 mkdir -p zeus/memory
+node bin/staleness-check.mjs   # output: FRESH | SNAPSHOT_STALE | MAP_STALE | MISSING | NO_GIT
 ```
 
-1. **Context snapshot** — Check `zeus/memory/context-snapshot.json`:
-   - If it exists: parse and validate — must have `git_hash`, `changed_files`, `blast_radius`, `generated`
-   - If missing, stale (hash != `HEAD`), or invalid JSON: run `git diff HEAD~1..HEAD` to rebuild via `lib/context-snapshot.mjs`
-   - Output: `[Session: <N> files changed since last session. Blast radius: <paths>]`
+Based on output:
+- `FRESH` → no action needed
+- `SNAPSHOT_STALE:hash` → run `node lib/context-snapshot.mjs --write` to rebuild snapshot
+- `MAP_STALE:hash` → run `git diff --name-only <hash> HEAD` → re-read only changed files
+- `SNAPSHOT_MISSING` → run `node lib/context-snapshot.mjs --write` to create it
+- `MAP_MISSING` → no action (map is generated on demand)
+- `NO_GIT` → skip all memory checks (no git repo)
 
-2. **Project map staleness** — If `zeus/memory/project-map.md` exists:
-   - Read git hash from header line (`Git: <hash>`)
-   - If hash != current HEAD: run `git diff --name-only <hash> HEAD` → re-read only changed files
-   - Update map entries in working memory
+Output `[Session: <status>]` as a summary line.
 
-3. **Known issues** — If `zeus/memory/known-issues.md` exists:
+Then check known issues: If `zeus/memory/known-issues.md` exists:
    - Read entries into working memory
    - When `systematic-debugging` fires: check known issues first before starting investigation
    - If no file: no action
@@ -45,7 +46,7 @@ mkdir -p zeus/memory
 ## Complexity Classification (run first, output decision)
 
 1. **User annotation** → `@quick` → **Fast Path** (skip all further checks). `@full` → **Full Path**.
-2. **Security triage** → invoke `security-triage` immediately. If any T1/T2/T3 trigger fires → **Full Path** (annotate with trigger), halt classification.
+2. **Security triage** → run `node bin/security-scan.mjs <files>` for automated T1/T2/T3 pattern matching. If any match found → **Full Path** (annotate with trigger), halt classification. Then invoke `security-triage` skill for the T4 semantic audit.
 3. **Heuristics** → if none of the above:
    - Files touched ≤ 2 AND task keywords in {fix, typo, rename, update, bump, refactor} AND single concern → **Fast Path**
    - Otherwise → **Full Path**

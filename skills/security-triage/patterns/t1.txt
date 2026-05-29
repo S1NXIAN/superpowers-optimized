@@ -1,0 +1,27 @@
+# T1: File path patterns — matched against full relative path
+# Glob semantics: * matches any chars including /, ? matches any single char
+# One pattern per line, comments start with #
+# Explicit non-matches (path segments that never trigger T1): docs/ tests/ sub-agents/ templates/
+
+# Identity & Access
+auth* login* logout* session* identity* sso*
+
+# Secrets & Keys
+secret* credential* token* cert* key*
+*.pem *.key *.cert *.p12 .htaccess .htpasswd .acl
+
+# Security Domains
+security* rbac* crypto* cipher* encrypt*
+hash* digest* signature* tls* ssl* cors* csp* csrf* xss*
+
+# Input & Rate Safety
+sanitize* escape* validation* rate-limit* throttle* quota*
+
+# Deployment & Compliance
+deploy* rollback* migration* compliance* gdpr* pii*
+
+# Federation
+oauth* oidc* saml* jwt* openid*
+
+# Infrastructure Security
+firewall* proxy* vpn* secrets-manager* vault* hsm*

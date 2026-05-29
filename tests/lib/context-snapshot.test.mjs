@@ -1,10 +1,10 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { writeFileSync, mkdtempSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdtempSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { execSync } from 'node:child_process';
-import { buildSnapshot, validateSnapshot } from '../../lib/context-snapshot.mjs';
+import { buildSnapshot, validateSnapshot, cli } from '../../lib/context-snapshot.mjs';
 
 function createGitRepo(dir) {
   execSync('git init', { cwd: dir, stdio: 'pipe' });
@@ -66,8 +66,62 @@ describe('lib/context-snapshot', () => {
       assert.equal(validateSnapshot(null), false);
     });
 
-    it('returns false for non-object', () => {
-      assert.equal(validateSnapshot('string'), false);
-    });
+  it('returns false for non-object', () => {
+    assert.equal(validateSnapshot('string'), false);
   });
+});
+
+describe('lib/context-snapshot CLI', () => {
+  const LIB = new URL('../../lib/context-snapshot.mjs', import.meta.url).pathname;
+
+  it('--build prints JSON to stdout', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'cs-cli-'));
+    createGitRepo(dir);
+    writeFileSync(join(dir, 'extra.js'), '// extra');
+    execSync('git add . && git commit -m "extra"', { cwd: dir, stdio: 'pipe' });
+    const out = execSync(`node ${LIB} --build ${dir}`, { encoding: 'utf8' });
+    const snap = JSON.parse(out);
+    assert.ok(snap.git_hash);
+    assert.ok(snap.changed_files.length > 0);
+  });
+
+  it('--write creates zeus/memory/context-snapshot.json', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'cs-cli-'));
+    createGitRepo(dir);
+    execSync(`node ${LIB} --write ${dir}`, { encoding: 'utf8' });
+    const snapPath = join(dir, 'zeus', 'memory', 'context-snapshot.json');
+    assert.ok(existsSync(snapPath));
+    const snap = JSON.parse(readFileSync(snapPath, 'utf8'));
+    assert.ok(snap.git_hash);
+  });
+
+  it('--validate outputs VALID for good snapshot', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'cs-cli-'));
+    createGitRepo(dir);
+    execSync(`node ${LIB} --write ${dir}`, { encoding: 'utf8' });
+    const snapPath = join(dir, 'zeus', 'memory', 'context-snapshot.json');
+    const out = execSync(`node ${LIB} --validate ${snapPath}`, { encoding: 'utf8' });
+    assert.equal(out.trim(), 'VALID');
+  });
+
+  it('--check outputs FRESH when hash matches HEAD', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'cs-cli-'));
+    createGitRepo(dir);
+    execSync(`node ${LIB} --write ${dir}`, { encoding: 'utf8' });
+    const snapPath = join(dir, 'zeus', 'memory', 'context-snapshot.json');
+    const out = execSync(`node ${LIB} --check ${snapPath}`, { encoding: 'utf8', cwd: dir });
+    assert.equal(out.trim(), 'FRESH');
+  });
+
+  it('--check outputs NO_FILE when file missing', () => {
+    const out = execSync(`node ${LIB} --check /nonexistent/snap.json`, { encoding: 'utf8' });
+    assert.equal(out.trim(), 'NO_FILE');
+  });
+
+  it('--help prints usage', () => {
+    const out = execSync(`node ${LIB} --help`, { encoding: 'utf8' });
+    assert.ok(out.includes('--build'));
+    assert.ok(out.includes('--write'));
+  });
+});
 });
