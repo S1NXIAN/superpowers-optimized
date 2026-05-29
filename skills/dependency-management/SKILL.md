@@ -1,160 +1,143 @@
 ---
 name: dependency-management
-description: Strict protocol for one-at-a-time dependency updates. Prevents "Dependency Hell" via incremental verification.
+description: Use when updating project dependencies — upgrading versions, adding new packages, or resolving lockfile conflicts. Do NOT use for initial project setup or scaffolding.
 ---
 
 # Dependency Management
 
-Update once. Verify twice. Move on.
+## Overview
+
+Dependency updates look simple — bump a version number, run install, done. In practice, they're one of the most common sources of hard-to-diagnose breakage: silent API changes, peer dependency conflicts, and transitive resolution shifts.
+
+**Core principle:** Update once. Verify twice. Never batch major upgrades.
 
 ## The Iron Rule
-**NEVER batch major upgrades.** One package per commit. One verification cycle per change.
 
-## The Operational Workflow
+**NEVER batch multiple major upgrades into one commit.** If something breaks, you need to know which upgrade caused it.
 
-1.  **Phase 1 (Audit):**
-    - List outdated deps (`npm outdated`, `pip list --outdated`, etc.).
-    - Categorize: **Security** > **Breaking** > **Feature**.
-2.  **Phase 2 (Assessment):**
-    - Read the changelog.
-    - Grep the codebase for usage of changed APIs.
-    - Identify peer dependency risks.
-3.  **Phase 3 (Incremental Update):**
-    - Update exactly ONE package.
-    - Commit lockfile change separately from code changes.
-    - **Verify:** Full test suite + build success.
-4.  **Phase 4 (Smoke Test):**
-    - Run the application. Hit the affected codepath.
+### Sub-rules:
+- One package per commit for major upgrades
+- One verification cycle per change
+- Lockfile changes committed separately from code changes
+- Never remove the lockfile to "start fresh"
 
-## Handling Vulnerabilities (CVE)
-- Assess exploitability: Is the vulnerable function actually called?
-- If patch available: Priority 1 Update.
-- If no patch: Document in `known-issues.md` with a re-check date.
+## The Process
 
-## Lockfile Conflicts
-- **Resolution:** Accept target branch version &rarr; Re-run `install` &rarr; Verify. Never hand-edit a lockfile.
+### Phase 1: Audit
 
-## Rationalization Table
-
-| Temptation | Danger |
-| :--- | :--- |
-| "I'll just update all 5 minor deps" | If the build breaks, you lose 20 min finding the culprit. |
-| "It's just a version bump, no code change" | Silent API shifts or transitive peer conflicts can still kill the runtime. |
-| "Delete lockfile to start fresh" | Destroys the deterministic nature of the project. |
-
-Update one thing at a time. Verify after each. Never batch major upgrades.
-
-## Why This Exists
-
-Dependency updates look simple — bump a version number, run install, done. In practice, they're one of the most common sources of hard-to-diagnose breakage: silent API changes, peer dependency conflicts, transitive dependency resolution shifts, and build tool incompatibilities. This skill enforces a structured approach that catches breakage at the smallest possible blast radius.
-
-## Phase 1: Audit
-
-Before changing any versions, understand what needs updating and why.
+Before changing anything, understand what needs updating:
 
 1. **List outdated dependencies:**
    - Node.js: `npm outdated` or `yarn outdated`
    - Python: `pip list --outdated` or `pip-audit`
    - Go: `go list -m -u all`
    - Rust: `cargo outdated`
-   - General: check the package manager's audit/outdated command
 
-2. **Categorize each update by urgency:**
-   - **Security** — CVE or advisory with known exploit. Update immediately.
-   - **Breaking** — major version bump with documented breaking changes. Plan carefully.
-   - **Feature** — minor/patch version with new features or non-breaking fixes. Low risk.
-   - **Transitive** — a dependency of a dependency. Usually handled by lockfile update.
+2. **Categorize by urgency:**
+   - **Security** — CVE or advisory. Update immediately.
+   - **Breaking** — Major version bump with documented breaking changes.
+   - **Feature** — Minor/patch with new features or non-breaking fixes.
+   - **Transitive** — Dependency of a dependency. Handled by lockfile update.
 
-3. **Prioritize:** Security > Breaking (if blocking other work) > Feature. Don't update everything at once — pick the highest-priority items first.
+3. **Prioritize:** Security > Breaking (if blocking) > Feature. Don't update everything at once.
 
-## Phase 2: Impact Assessment
+### Phase 2: Impact Assessment
 
 For each dependency to update (especially major versions):
 
-1. **Read the changelog/migration guide.** Look for:
+1. **Read the changelog/migration guide** for:
    - Breaking API changes (renamed functions, removed options, changed signatures)
-   - Dropped platform/runtime support (minimum Node version, Python version, etc.)
-   - Peer dependency changes (requires React 18, drops support for React 16)
-   - Changed default behavior (opt-in → opt-out, strict mode, new warnings)
+   - Dropped platform/runtime support (minimum Node version, Python version)
+   - Peer dependency changes (requires React 18, drops React 16)
+   - Changed default behavior (opt-in → opt-out, strict mode)
 
-2. **Search the codebase for usage of changed APIs.** For each renamed/removed API, run separate searches for:
+2. **Search the codebase** for usage of changed APIs:
    - Direct calls and type references
    - String literals and dynamic access (`obj["methodName"]`)
    - Import statements and re-exports
    - Test files and mocks
    
-   Do not assume a single search caught everything — a function name may appear as a type annotation, a string key, or in a mock, each of which requires a separate pattern.
+   Do not assume one search caught everything. A function name may appear as a type annotation, a string key, or in a mock — each requires a separate pattern.
 
-3. **Check peer dependency compatibility:** Will this update conflict with other installed packages? The package manager usually warns, but check proactively for frameworks with tight coupling (React + React DOM, Angular packages, etc.).
+3. **Check peer dependency compatibility:** Will this update conflict with other installed packages? Proactively check for frameworks with tight coupling (React + React DOM, Angular packages).
 
-4. **Classify the risk level:**
-   - **Low risk:** Patch/minor update, no breaking changes documented, limited usage in codebase.
-   - **Medium risk:** Minor update with deprecation warnings, or major update with few breaking changes that don't affect our usage.
-   - **High risk:** Major update with breaking changes that affect our usage, or dependency with deep integration (ORM, framework, build tool).
+### Phase 3: Incremental Update
 
-## Phase 3: Update Incrementally
+One dependency at a time. Verify after each:
 
-One dependency at a time. Verify after each.
+1. **Update:**
+   - `npm install package@version`
+   - Commit lockfile changes SEPARATELY from code changes
+   
+2. **Run the full test suite:**
+   - If tests fail, does the error match documented breaking changes?
+   - If yes: apply the migration and re-run tests
+   - If no: investigate before proceeding. Undocumented breaking change = red flag.
 
-1. **Update the dependency:**
-   - For a specific package: `npm install package@version` / `pip install package==version`
-   - For lockfile refresh: `npm install` / `pip install -r requirements.txt`
-   - Commit the lockfile change separately from any code changes the update requires.
+3. **Run the build:** Type errors, import resolution failures, import resolution failures often surface here, not in tests.
 
-2. **Run the full test suite.** If tests fail:
-   - Read the error — does it match a documented breaking change from Phase 2?
-   - If yes: apply the migration (API rename, config change, etc.) and re-run tests.
-   - If no: investigate before proceeding. An undocumented breaking change is a red flag — consider pinning or waiting.
+4. **Smoke test at runtime** if the dependency affects runtime behavior (not just types/build).
 
-3. **Run the build.** Type errors, import resolution failures, and build tool incompatibilities often surface here, not in tests.
-
-4. **Smoke test at runtime** if the dependency affects runtime behavior (not just types/build). Start the app, hit the affected codepath, verify it works.
-
-5. **Stage the changes.** When the user asks for a commit, use a message that names the package and version: `chore(deps): upgrade lodash 4.17.20 → 4.17.21 (CVE-2021-23337)`. Do not auto-commit unless explicitly asked.
+5. **Stage changes:** When the user asks for a commit, use a message naming the package and version: `chore(deps): upgrade lodash 4.17.20 → 4.17.21`. Do NOT auto-commit unless explicitly asked.
 
 6. **Repeat** for the next dependency.
 
-## Phase 4: Verification
+### Phase 4: Verification
 
-After all planned updates are applied:
+After all planned updates:
 
-1. **Full test suite green** — no skipped, no flaky.
-2. **Build succeeds** — no type errors, no unresolved imports.
-3. **Lockfile committed** — the lockfile reflects all updates and nothing else.
-4. **No unrelated changes** — dependency updates should not include code changes that aren't required by the update. Refactoring "while I'm here" belongs in a separate commit.
+- [ ] Full test suite green — no skipped, no flaky
+- [ ] Build succeeds — no type errors, no unresolved imports
+- [ ] Lockfile committed — reflects all updates and nothing else
+- [ ] No unrelated changes — dependency updates should not include code changes that aren't required
 
-## Special Case: Security Vulnerabilities
+## Handling Security Vulnerabilities
 
-When a CVE or security advisory requires urgent action:
-
-1. **Assess exploitability:** Does the vulnerability affect how the dependency is used in this project? A ReDoS in a regex function you never call is low urgency regardless of CVSS score.
-2. **Check for patch availability:** Is there a patched version? If not, is there a workaround?
-3. **If patch exists:** Follow the standard update flow (Phase 2 → 3 → 4).
-4. **If no patch:** Document in `known-issues.md` with the CVE, affected dependency, workaround (if any), and date to re-check.
+1. **Assess exploitability:** Does the vulnerability affect how the dependency is used here? A ReDoS in a regex you never call is low urgency regardless of CVSS score.
+2. **Check for patch:** Patched version available? Follow standard update flow.
+3. **If no patch:** Document in `known-issues.md` with the CVE, workaround, and date to re-check.
 
 ## Lockfile Merge Conflicts
 
-Lockfile conflicts are common when dependency updates happen on parallel branches. Never hand-edit a lockfile to resolve conflicts — the resolution process is:
+Never hand-edit a lockfile. The resolution process:
 
-1. Accept either side of the conflict (typically the target branch's version).
-2. Re-run the install command (`npm install`, `yarn install`, `pip install -r requirements.txt`) to regenerate the lockfile with the correct resolution.
-3. Verify the lockfile reflects all intended dependency versions.
+1. Accept either side of the conflict (typically the target branch's version)
+2. Re-run the install command to regenerate the lockfile
+3. Verify the lockfile reflects all intended dependency versions
 
-## Version Pinning Strategy
+## Common Mistakes
 
-- **Production dependencies:** Use exact versions or lockfiles to ensure reproducible builds. Ranges (`^`, `~`) are acceptable when the lockfile is committed.
-- **Dev dependencies:** Ranges are fine — breakage is caught in CI, not production.
-- **Monorepos:** If dependencies are shared across packages, coordinate updates to avoid version skew. Update the shared dependency in all packages in one commit to keep them in sync.
+| Mistake | Fix |
+|---------|-----|
+| Batching multiple major upgrades | One per commit. You need to know what broke. |
+| Removing lockfile "to start fresh" | Changes every transitive dep at once. Never do this. |
+| Mixing dev and production deps in one commit | Separate commits. Different risk profiles. |
+| Hand-editing lockfiles | Always regenerate via package manager. |
+| Not reading the changelog | Breaking changes are documented. Read before updating. |
+| Assuming minor/patch is always safe | Silent API shifts can still break. Verify. |
 
-## Rules
+## Rationalization Table
 
-- Never batch multiple major version upgrades into one commit. If something breaks, you need to know which upgrade caused it.
-- Never remove a lockfile to "start fresh" — lockfile deletion changes every transitive dependency at once, making any breakage nearly impossible to diagnose.
-- Don't upgrade dev dependencies and production dependencies in the same commit unless they're tightly coupled (e.g., `typescript` + `@types/*`).
-- If an update requires code changes, commit the version bump and the code changes together — they're atomic. But don't mix two different dependency updates in one commit.
+| Temptation | Danger |
+|------------|--------|
+| "I'll update all 5 minor deps at once" | If the build breaks, you lose 20 min finding the culprit. |
+| "It's just a version bump, no code change" | Silent API shifts or transitive peer conflicts can kill the runtime. |
+| "Delete lockfile and reinstall" | Destroys deterministic resolution. Never do this. |
+| "I don't need to read the changelog" | You'll miss breaking changes. Always read it. |
+| "The tests pass, so the update is safe" | Types and runtime behavior can break differently. Run the build too. |
 
-## Related Skills
+## Red Flags
 
+- Updating multiple packages in one commit
+- Removing the lockfile to "clean up"
+- Hand-editing a lockfile
+- Skipping the full test suite after a dependency update
+- Not reading the changelog for a major version update
+- Assuming minor/patch bumps are always safe
+
+## Integration
+
+**Related skills:**
 - `systematic-debugging` — when an update causes unexpected failures
 - `test-driven-development` — when the update requires new tests for changed behavior
 - `error-recovery` — to document recurring dependency issues in `known-issues.md`
