@@ -5,7 +5,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const zeusPath = join(__dirname, '../../agent/zeus.md');
+const zeusPath = join(__dirname, '../../agents/zeus.md');
 const fastPathPath = join(__dirname, '../../skills/zeus/fast-path/SKILL.md');
 const fullPathPath = join(__dirname, '../../skills/zeus/full-path/SKILL.md');
 
@@ -14,7 +14,7 @@ const fastPathContent = readFileSync(fastPathPath, 'utf-8');
 const fullPathContent = readFileSync(fullPathPath, 'utf-8');
 
 describe('Zeus 2.0 Elite Modular Architecture', () => {
-  describe('agent/zeus.md (Router)', () => {
+  describe('agents/zeus.md (Router)', () => {
     describe('Complexity Classification', () => {
       it('Has Complexity Classification heading', () => assert.ok(zeusContent.includes('## Complexity Classification')));
       it('Has classification output format', () => assert.ok(zeusContent.includes('Classification: [Path] [Reasoning]')));

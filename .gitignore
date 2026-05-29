@@ -37,6 +37,4 @@ yarn-error.log
 .env
 .env.*
 .local
-.opencode/*
-!.opencode/agents
-!.opencode/agents/*
+.opencode/
