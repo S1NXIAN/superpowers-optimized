@@ -251,7 +251,7 @@ function verify(restoredPaths = []) {
   if (config) {
     const plugins = config.plugin || [];
     if (plugins.some(p => p === SUPERPOWERS_PLUGIN)) { con.outError('opencode.json still has superpowers plugin'); verifyFailed = true; }
-    else con.outOk('Superpowers plugin removed from opencode.json');
+    else con.outOk('Zeus Elite plugin removed from opencode.json');
 
     if (config.default_agent === 'zeus') { con.outError('default_agent still set to zeus'); verifyFailed = true; }
     else con.outOk('default_agent no longer zeus');

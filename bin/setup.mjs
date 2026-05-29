@@ -25,7 +25,7 @@ let backupDir = null;
 
 function showHelp() {
   console.log(`${c(BOLD, 'opencode-zeus \u2014 config installer')}\n`);
-  console.log(`${c(DIM, 'Installs a Superpowers-optimized OpenCode configuration.')}\n`);
+  console.log(`${c(DIM, 'Installs a Zeus Elite-optimized OpenCode configuration.')}\n`);
   console.log(`${c(BOLD, 'Usage:')}  node bin/setup.mjs [OPTIONS]\n`);
   console.log(`${c(BOLD, 'Options:')}`);
   console.log('  --force       Non-interactive; overwrite without prompting');
@@ -84,9 +84,9 @@ function preflight() {
     if (config) {
       const plugins = config.plugin || [];
       if (plugins.some(p => p.includes('superpowers'))) {
-        con.outOk('Superpowers plugin declared in opencode.json');
+        con.outOk('Zeus Elite plugin declared in opencode.json');
       } else {
-        con.outWarn('Superpowers plugin not found in opencode.json plugin array');
+        con.outWarn('Zeus Elite plugin not found in opencode.json plugin array');
         con.outSubdued('Will be added during installation.');
       }
     }

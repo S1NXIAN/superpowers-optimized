@@ -2,10 +2,10 @@
 
 **Date:** 2026-05-29  
 **Status:** Approved  
-**Topic:** Transitioning Zeus to a 100% independent system by removing Superpowers dependencies and hardening for Unix-only high-performance environments.
+**Topic:** Transitioning Zeus to a 100% independent system by removing Zeus Elite dependencies and hardening for Unix-only high-performance environments.
 
 ## 1. Problem Statement
-Zeus currently relies on the Superpowers plugin for its execution engine and terminology. To achieve full ownership and maximum performance, we must decouple from the upstream project and implement our own native logic.
+Zeus currently relies on the Zeus Elite plugin for its execution engine and terminology. To achieve full ownership and maximum performance, we must decouple from the upstream project and implement our own native logic.
 
 ## 2. Proposed Architecture: Zeus Elite Zero
 A 100% independent orchestration layer designed specifically for Unix environments with high-performance modern tooling.
@@ -16,7 +16,7 @@ A 100% independent orchestration layer designed specifically for Unix environmen
   - **Logic:** Unix-only Session Init, Security Scan, Routing.
   - **Purpose:** Directs workflows without external plugin dependencies.
 - **`skills/` Registry**:
-  - All logic is now owned by `opencode-zeus`. All "Superpowers" references are purged.
+  - All logic is now owned by `opencode-zeus`. All "Zeus Elite" references are purged.
 
 ### 2.2 Modern Tooling & Performance
 Zeus Elite prioritizes modern CLI utilities for maximum speed:

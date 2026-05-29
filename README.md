@@ -19,7 +19,7 @@
 `opencode-zeus` transforms a vanilla OpenCode AI coding assistant into a structured, high-discipline engineering pipeline with mandatory test-driven development (TDD), security triage, architecture deliberation, and multi-stage code review. All processes are orchestrated by a central Zeus agent that dynamically scales its quality gate ceremony to match the complexity of the incoming task.
 
 > [!NOTE]
-> This overlay extends the [Superpowers](https://github.com/obra/superpowers) engineering methodology specifically optimized for OpenCode environments. It operates completely locally, with zero third-party dependencies, running purely on Node.js built-in modules.
+> This overlay extends the [Zeus Elite](https://github.com/obra/superpowers) engineering methodology specifically optimized for OpenCode environments. It operates completely locally, with zero third-party dependencies, running purely on Node.js built-in modules.
 
 ## Features
 

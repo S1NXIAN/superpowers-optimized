@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use opencode-zeus:subagent-driven-development or executing-plans. 
 
-**Goal:** Achieve full project sovereignty by removing Superpowers dependencies, deprecating Windows, and prioritizing modern Unix-only tooling (`rg`, `fd`).
+**Goal:** Achieve full project sovereignty by removing Zeus Elite dependencies, deprecating Windows, and prioritizing modern Unix-only tooling (`rg`, `fd`).
 
 **Architecture:** Independent Zeus Router & Workflow Logic. Zero external plugins.
 
@@ -26,7 +26,7 @@ git commit -m "chore: remove Windows support and .ps1 assets"
 
 ---
 
-### Task 2: Decoupling from Superpowers
+### Task 2: Decoupling from Zeus Elite
 
 **Files:**
 - Modify: `lib/constants.mjs`
@@ -38,7 +38,7 @@ git commit -m "chore: remove Windows support and .ps1 assets"
 - [ ] **Step 3: Commit**
 ```bash
 git add .
-git commit -m "feat: decouple from Superpowers plugin"
+git commit -m "feat: decouple from Zeus Elite plugin"
 ```
 
 ---
@@ -64,19 +64,19 @@ git commit -m "feat: prioritize modern tooling (rg, fd) in installer"
 **Files:**
 - Modify: All `*.md` files in `agent/`, `skills/`, and `AGENTS.md`.
 
-- [ ] **Step 1: Replace "Superpowers" with "Zeus Elite" or "Elite Standards" across the repo**
+- [ ] **Step 1: Replace "Zeus Elite" with "Zeus Elite" or "Elite Standards" across the repo**
 - [ ] **Step 2: Commit**
 ```bash
-grep -rl "Superpowers" . | xargs sed -i 's/Superpowers/Zeus Elite/g'
+grep -rl "Zeus Elite" . | xargs sed -i 's/Zeus Elite/Zeus Elite/g'
 git add .
-git commit -m "docs: scrub Superpowers branding and terminology"
+git commit -m "docs: scrub Zeus Elite branding and terminology"
 ```
 
 ---
 
 ### Task 5: Testing & Integration
 
-- [ ] **Step 1: Update tests to remove Superpowers plugin assumptions**
+- [ ] **Step 1: Update tests to remove Zeus Elite plugin assumptions**
 - [ ] **Step 2: Run all tests (npm test)**
 - [ ] **Step 3: Commit**
 ```bash

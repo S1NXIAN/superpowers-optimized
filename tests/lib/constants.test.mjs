@@ -1,17 +1,11 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  SUPERPOWERS_PLUGIN, SKILLS_PATH, CONFIG_DIR, CONFIG_JSON_PATH,
+  SKILLS_PATH, CONFIG_DIR, CONFIG_JSON_PATH,
   BACKUP_PARENT, FILE_COPIES, DIR_COPIES, MANAGED_FILES, MANAGED_DIRS,
 } from '../../lib/constants.mjs';
 
 describe('lib/constants', () => {
-  it('exports SUPERPOWERS_PLUGIN as a non-empty string containing superpowers', () => {
-    assert.equal(typeof SUPERPOWERS_PLUGIN, 'string');
-    assert.ok(SUPERPOWERS_PLUGIN.length > 0);
-    assert.ok(SUPERPOWERS_PLUGIN.includes('superpowers'));
-  });
-
   it('exports SKILLS_PATH as a non-empty string', () => {
     assert.equal(typeof SKILLS_PATH, 'string');
     assert.ok(SKILLS_PATH.length > 0);
