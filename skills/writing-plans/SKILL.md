@@ -34,6 +34,8 @@ Before defining tasks, map out which files will be created or modified and what 
 - In existing codebases, follow established patterns
 - If a file you're modifying has grown unwieldy, splitting it is reasonable
 
+**Research:** If you're unsure about existing patterns or architecture, dispatch `@code-exploration` before defining tasks. A targeted research pass prevents boundary mistakes in the plan.
+
 ## Bite-Sized Task Granularity
 
 **Each step is one action (2-5 minutes):**

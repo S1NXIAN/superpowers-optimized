@@ -204,8 +204,10 @@ Task 2: Recovery modes...
 - `finishing-a-development-branch` — present merge/PR/discard options
 
 **Subagents used by this skill:**
+- `code-exploration` — pre-task research (understand architecture before implementing)
 - `spec-validation` — Stage 1 review (spec vs implementation)
 - `quality-review` — Stage 2 review (code quality, technical debt)
+- `root-cause-analysis` — investigate BLOCKED tasks or unexpected failures
 
 **Subagents should use:**
 - `test-driven-development` — enforced by their system prompts

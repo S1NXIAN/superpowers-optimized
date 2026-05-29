@@ -290,6 +290,9 @@ If you catch yourself thinking any of these, you're about to violate the Iron La
 - `self-consistency-reasoner` — for multi-path hypothesis generation (Phase 3)
 - `error-recovery` — to document complex platform bugs in `known-issues.md`
 
+**Subagent dispatch:**
+- `root-cause-analysis` — dispatch for independent investigation of complex bugs
+
 ## When Process Reveals "No Root Cause"
 
 If systematic investigation shows the issue is environmental, timing-dependent, or external:

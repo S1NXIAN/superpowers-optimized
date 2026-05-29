@@ -55,10 +55,19 @@ On `CRITICAL` signatures (verified via `skills.sh audit`), dispatch the speciali
 | `@security-audit` | Penetration and break-testing | Security-critical or auth-related changes |
 | `@structure-review` | Structural boundaries and SOLID | Cross-module or API changes |
 | `@design-review` | UI/UX, accessibility, visual hierarchy | Any frontend or UI work |
+| `@root-cause-analysis` | Root cause diagnosis | Bugs, test failures, unexpected behavior |
 | `@verification` | Exhaustive edge-case verification | Always — all changes |
 | `@code-cleanup` | DRY and technical debt elimination | Always — on completion |
 
 **Parallel Rule:** Dispatch all relevant subagents simultaneously in a single turn using the Task tool. Each subagent gets a focused prompt with the specific files and concern.
+
+## Research Dispatch
+
+Before dispatching implementation tasks, use `@code-exploration` for research:
+- "How does the auth flow work?" → `@code-exploration` with a research question
+- "Find all usages of this API" → `@code-exploration` with the pattern
+
+`@code-exploration` returns a compressed summary, never raw file contents.
 
 ## Model Strategy
 
