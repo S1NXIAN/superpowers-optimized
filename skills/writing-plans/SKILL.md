@@ -1,36 +1,36 @@
 ---
 name: writing-plans
-description: Elite task decomposition. Produces atomic implementation plans with TDD ordering and verification commands.
+description: Precision implementation planning with mandatory blast-radius analysis and TDD sequencing.
 ---
 
 # Writing Plans
 
-Plan for Machine Execution. Minimize Ambiguity.
+Precision Mapping. Zero Ambiguity.
 
-## Plan Header
-Must include Goal, Architecture, Stack, and Assumptions (with exclusions).
+## The Somatic Scan (Blast Radius)
+Before defining tasks, perform a mandatory **Call-Graph Audit**:
+1.  **Callers:** Use `rg` to find what other modules call this code.
+2.  **Dependencies:** Identify what this code depends on.
+3.  **Side Effects:** Explicitly state if this change will force updates in `tests/`, `configs/`, or `migrations/`.
 
-## File Structure Map
-Define every file change before tasks. Favor small, focused files with clear boundaries.
-
-## Task Rules
-1.  **RED-GREEN Sequence:** Every logic change requires a failing test first.
-2.  **Atomic (2-5 min):** One action per task.
-3.  **Verification Command:** Precise command and expected outcome required.
-4.  **No Placeholders:** Never use "TBD", "update logic", or "add validation." Show the code.
+## Task Mandates
+1.  **TDD Motor:** Every logical change MUST include a Step 1: "Write failing test" and a Step 2: "Verify RED."
+2.  **Atomic Precision:** Keep each task to a 2-5 minute vertical slice.
+3.  **No Placeholders:** Never use "update logic" or "add validation." Show the exact code or command.
+4.  **Specialized Tooling:** Prefer `sd` for regex renames and `ast-grep` for structural changes.
 
 ## Self-Review Checklist
-- [ ] **Spec Coverage:** Does every requirement have a task?
-- [ ] **Zero Red-Flags:** No "TODO" or "Basic version."
-- [ ] **Type Consistency:** Method names and types match across all tasks.
+- [ ] **Spec Alignment:** Every requirement in the design has a vertical task.
+- [ ] **Zero Slop:** No "placeholder" comments or "initial versions."
+- [ ] **Safety:** All `rm` or `chmod` commands are screened by the Command Guard.
 
 ## Ready Gate
-Invoke `subagent-driven-development` or `executing-plans`.
+Invoke `subagent-driven-development` for parallel execution or `executing-plans` for sequential.
 
 ## Rationalization Table
 
 | Temptation | Risk |
 | :--- | :--- |
-| "I'll update the logic in one task" | Unverifiable. High risk of regression. |
-| "Write tests after implementation" | Tests will pass immediately, proving nothing. |
-| "Add error handling later" | Placeholders in plans result in placeholders in production. |
+| "I'll group these 3 small files into one task" | Context bleed and difficult debugging if a test fails. |
+| "Write tests after implementation" | Tests will pass for the wrong reasons. The behavior is unverified. |
+| "Skip the blast-radius check" | Breaking remote modules that you forgot existed. |

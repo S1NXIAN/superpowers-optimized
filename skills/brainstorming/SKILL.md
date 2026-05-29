@@ -1,36 +1,30 @@
 ---
 name: brainstorming
-description: Elite architectural design gate. Turns rough requests into approved specs with failure-mode analysis.
+description: Adversarial design gate. Pressure-tests requirements into approved specs with mandatory failure-mode analysis.
 ---
 
 # Brainstorming
 
-Design for Scale. Design for Isolation.
+Siege the Idea. Build the Mind.
 
-## Hard Gates
-1.  **Approval Required:** No code, no implementation plans until the spec is approved.
-2.  **Scope Check:** If 4+ subsystems or 20+ tasks, decompose into sub-projects.
-3.  **Failure-Mode Check:** You MUST state 3 ways the design could fail before asking for approval.
+## Hard Gate: The Immune Response
+**Approval is impossible without a Stress Test.** 
+- Before design approval, you MUST state **3 concrete ways** this design will fail (e.g., race conditions, memory leaks, scale limits, edge-case collisions).
+- If a Critical failure is identified &rarr; **ABORT** &rarr; Redesign the core idea.
 
-## Operational Checklist
-1.  **Inspect Context:** Recent commits, current docs, and hot files.
-2.  **Clarify Turn:** One Turn. Collect all questions. Use multiple-choice.
-3.  **Propose Options:** Provide 3 approaches with trade-offs. Recommend the one with highest SNR.
-4.  **Draft Spec:** Use the Failure-Mode Check to pressure-test the choice.
-5.  **Self-Review:** Scan for TBDs, contradictions, or over-engineering.
-
-## Design Patterns
-- **Small Units:** One purpose, defined interfaces.
-- **Minimal Surface Area:** Changes should not require coordinating across many files.
-- **Existing Alignment:** Match the project's established style.
+## Operational Cycle
+1.  **Context Probe:** Use `rg` and `fd` to map the target somatic region (files, docs, recent commits).
+2.  **The Single Turn:** Ask ALL clarifying questions in a single response turn. Use multiple-choice where possible.
+3.  **The Siege:** Propose 2-3 approaches with trade-offs. Perform the Failure-Mode check on the recommended path.
+4.  **The Blueprint:** Save approved design to `docs/zeus/specs/YYYY-MM-DD-<topic>.md`.
 
 ## Rationalization Table
 
-| Temptation | Danger |
+| Temptation | Risk |
 | :--- | :--- |
-| "This is too simple to design" | Unexamined assumptions cost 10x more to fix in implementation. |
-| "I'll just explain one approach" | Single-path reasoning leads to suboptimal architecture. |
-| "I'll ask questions Turn-by-Turn" | Wastes token efficiency and slows the developer. |
+| "I'll ask questions one by one" | Drains token efficiency and wastes developer focus. |
+| "This is too simple for a stress test" | Hidden assumptions cause 90% of implementation regressions. |
+| "Polite design is better" | Politeness hides flaws. Adversarial reasoning reveals them. |
 
 ## Exit
 Invoke `writing-plans`.

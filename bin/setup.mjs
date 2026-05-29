@@ -202,8 +202,8 @@ function installSystemDependencies() {
   const tools = [
     { name: 'rg', check: 'rg --version' },
     { name: 'fd', check: 'fd --version || fdfind --version' },
-    { name: 'sd', check: 'sd --version' },
-    { name: 'sg', check: 'sg --version' },
+    { name: 'sd', check: 'sd --version || fastmod --version' },
+    { name: 'ast-grep', check: 'ast-grep --version || sg --version' },
     { name: 'bat', check: 'bat --version || batcat --version' }
   ];
 
@@ -228,15 +228,15 @@ function installSystemDependencies() {
 
   try {
     if (existsSync('/etc/debian_version')) {
-      execSync('sudo apt-get update -qq && sudo apt-get install -y ripgrep fd-find sd ast-grep bat', { stdio: 'inherit' });
+      execSync('sudo apt-get update -qq && sudo apt-get install -y ripgrep fd-find sd fastmod ast-grep bat', { stdio: 'inherit' });
     } else if (existsSync('/etc/fedora-release') || existsSync('/etc/redhat-release')) {
-      execSync('sudo dnf install -y ripgrep fd-find sd ast-grep bat', { stdio: 'inherit' });
+      execSync('sudo dnf install -y ripgrep fd-find sd fastmod ast-grep bat', { stdio: 'inherit' });
     } else if (existsSync('/etc/arch-release')) {
-      execSync('sudo pacman -S --noconfirm ripgrep fd sd ast-grep bat', { stdio: 'inherit' });
+      execSync('sudo pacman -S --noconfirm ripgrep fd sd fastmod ast-grep bat', { stdio: 'inherit' });
     } else if (process.platform === 'darwin') {
-      execSync('brew install ripgrep fd sd ast-grep bat', { stdio: 'inherit' });
+      execSync('brew install ripgrep fd sd fastmod ast-grep bat', { stdio: 'inherit' });
     } else {
-      con.outWarn('Automatic installation not supported for this OS. Please install ripgrep, fd, sd, ast-grep and bat manually.');
+      con.outWarn('Automatic installation not supported for this OS. Please install tools manually.');
     }
   } catch (err) {
     con.outError(`Failed to install dependencies: ${err.message}`);
