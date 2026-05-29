@@ -1,131 +1,87 @@
-# Zeus 2.0 Modularization Implementation Plan
+# Zeus Elite Zero Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers-optimized:subagent-driven-development (recommended) or superpowers-optimized:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use opencode-zeus:subagent-driven-development or executing-plans. 
 
-**Goal:** Modularize Zeus into a Router-Workflow pattern and import the Elite Skill Pack.
+**Goal:** Achieve full project sovereignty by removing Superpowers dependencies, deprecating Windows, and prioritizing modern Unix-only tooling (`rg`, `fd`).
 
-**Architecture:** Router (ZEUS.md) -> Skill Handoff.
-
-**Tech Stack:** Node.js, Markdown.
+**Architecture:** Independent Zeus Router & Workflow Logic. Zero external plugins.
 
 ---
 
-### Task 1: Prep & Folder Structure
+### Task 1: Deprecation of Windows Assets
 
 **Files:**
-- Create: `skills/zeus/fast-path`
-- Create: `skills/zeus/full-path`
-- Create: `skills/premise-check`
-- Create: `skills/self-consistency-reasoner`
-- Create: `skills/error-recovery`
-- Create: `skills/subagent-driven-development`
-- Create: `skills/dependency-management`
+- Delete: `installers/install.ps1`
+- Delete: `installers/uninstall.ps1`
 
-- [ ] **Step 1: Create directories**
+- [ ] **Step 1: Delete Windows-specific assets**
 ```bash
-mkdir -p skills/zeus/fast-path skills/zeus/full-path \
-         skills/premise-check skills/self-consistency-reasoner \
-         skills/error-recovery skills/subagent-driven-development \
-         skills/dependency-management
+rm installers/install.ps1 installers/uninstall.ps1
 ```
 - [ ] **Step 2: Commit**
-```bash
-git add skills/
-git commit -m "chore: create canonical folder structure for Zeus 2.0"
-```
-
----
-
-### Task 2: Implement Workflow Skills
-
-**Files:**
-- Create: `skills/zeus/fast-path/SKILL.md`
-- Create: `skills/zeus/full-path/SKILL.md`
-
-- [ ] **Step 1: Write fast-path logic (TDD focus)**
-- [ ] **Step 2: Write full-path logic (Elite pipeline focus)**
-- [ ] **Step 3: Commit**
-```bash
-git add skills/zeus
-git commit -m "feat: implement modular fast-path and full-path skills"
-```
-
----
-
-### Task 3: Import Elite Skill Pack
-
-**Files:**
-- Create: `skills/premise-check/SKILL.md`
-- Create: `skills/self-consistency-reasoner/SKILL.md`
-- Create: `skills/error-recovery/SKILL.md`
-- Create: `skills/subagent-driven-development/SKILL.md`
-- Create: `skills/dependency-management/SKILL.md`
-
-- [ ] **Step 1: Import skills from superpowers-optimized references**
-- [ ] **Step 2: Commit**
-```bash
-git add skills/
-git commit -m "feat: import Elite Skill Pack (premise-check, consistency, SDD, recovery)"
-```
-
----
-
-### Task 4: Transform zeus.md into Router
-
-**Files:**
-- Modify: `agent/zeus.md`
-
-- [ ] **Step 1: Strip procedural logic and add classification-based skill loading**
-- [ ] **Step 2: Commit**
-```bash
-git add agent/zeus.md
-git commit -m "feat: transform zeus.md into a Router"
-```
-
----
-
-### Task 5: Specialized Sub-Agent Registry
-
-**Files:**
-- Create: `skills/social-accountability/sub-agents/architect-agent.md`
-- Create: `skills/social-accountability/sub-agents/hacker-agent.md`
-- Create: `skills/social-accountability/sub-agents/qa-pro-agent.md`
-- Create: `skills/social-accountability/sub-agents/cleaner-agent.md`
-
-- [ ] **Step 1: Write specialized prompts for each role**
-- [ ] **Step 2: Commit**
-```bash
-git add skills/social-accountability/sub-agents/
-git commit -m "feat: implement Specialized Sub-Agent Registry (architect, hacker, qa-pro, cleaner)"
-```
-
----
-
-### Task 6: Implement skills.sh Utility
-
-**Files:**
-- Create: `scripts/skills.sh`
-
-- [ ] **Step 1: Implement bash script with list, bootstrap, and audit commands**
-- [ ] **Step 2: Make executable and verify**
-- [ ] **Step 3: Commit**
-```bash
-chmod +x scripts/skills.sh
-git add scripts/skills.sh
-git commit -m "feat: implement skills.sh system utility"
-```
-
----
-
-### Task 7: Testing & Integration
-
-- [ ] **Step 1: Update tests to point to modular structure**
-- [ ] **Step 2: Update project map**
-- [ ] **Step 3: Run full suite (npm test)**
-- [ ] **Step 4: Commit**
 ```bash
 git add .
-git commit -m "test: verify Zeus 2.0 modular architecture"
+git commit -m "chore: remove Windows support and .ps1 assets"
+```
+
+---
+
+### Task 2: Decoupling from Superpowers
+
+**Files:**
+- Modify: `lib/constants.mjs`
+- Modify: `opencode.json`
+- Modify: `templates/opencode-template.json`
+
+- [ ] **Step 1: Remove SUPERPOWERS_PLUGIN from constants**
+- [ ] **Step 2: Remove superpowers plugin from config files**
+- [ ] **Step 3: Commit**
+```bash
+git add .
+git commit -m "feat: decouple from Superpowers plugin"
+```
+
+---
+
+### Task 3: Modern Tooling Integration (rg, fd)
+
+**Files:**
+- Modify: `bin/setup.mjs`
+- Modify: `installers/install.sh`
+
+- [ ] **Step 1: Add auto-install logic for rg and fd in setup.mjs**
+- [ ] **Step 2: Update installers/install.sh to reflect dependencies**
+- [ ] **Step 3: Commit**
+```bash
+git add .
+git commit -m "feat: prioritize modern tooling (rg, fd) in installer"
+```
+
+---
+
+### Task 4: Universal Instruction Scrub
+
+**Files:**
+- Modify: All `*.md` files in `agent/`, `skills/`, and `AGENTS.md`.
+
+- [ ] **Step 1: Replace "Superpowers" with "Zeus Elite" or "Elite Standards" across the repo**
+- [ ] **Step 2: Commit**
+```bash
+grep -rl "Superpowers" . | xargs sed -i 's/Superpowers/Zeus Elite/g'
+git add .
+git commit -m "docs: scrub Superpowers branding and terminology"
+```
+
+---
+
+### Task 5: Testing & Integration
+
+- [ ] **Step 1: Update tests to remove Superpowers plugin assumptions**
+- [ ] **Step 2: Run all tests (npm test)**
+- [ ] **Step 3: Commit**
+```bash
+git add .
+git commit -m "test: verify Zeus Elite Zero independent architecture"
 ```
 
 - [ ] **Step 2: Commit**
