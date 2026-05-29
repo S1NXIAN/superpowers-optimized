@@ -21,7 +21,7 @@ known-issues.md
 project-map.md
 
 # AI-generated design docs and implementation plans (scaffolding, not permanent)
-docs/superpowers/
+zeus/docs/
 
 # Node
 node_modules/

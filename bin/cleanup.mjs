@@ -3,7 +3,7 @@
  * bin/cleanup.mjs — remove AI-generated temp files after task completion
  *
  * Cleans known artifact paths created by the Zeus pipeline:
- *   - Design docs and plans (docs/superpowers/)
+ *   - Design docs and plans (zeus/docs/)
  *   - ASI loop state (.asi-state.json)
  *   - Agent artifacts (.antigravitycli/, .agents/, .gemini/)
  *   - Skill lock file (skills-lock.json)
@@ -19,8 +19,7 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createConsole } from '../lib/console.mjs';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const REPO_DIR = join(__dirname, '..');
+const REPO_DIR = process.cwd();
 const con = createConsole(process.stdout.isTTY);
 const { c, BOLD, DIM, RED } = con;
 
@@ -28,7 +27,7 @@ let dryRunMode = false;
 
 // All artifact paths — now all untracked/ignored, safe to delete without prompting
 const ARTIFACTS = [
-  { rel: 'docs/superpowers',     type: 'dir',  label: 'design docs and plans' },
+  { rel: 'zeus/docs',            type: 'dir',  label: 'design docs and plans' },
   { rel: '.asi-state.json',      type: 'file', label: 'ASI loop state' },
   { rel: '.antigravitycli',      type: 'dir',  label: 'agent artifacts' },
   { rel: '.agents',              type: 'dir',  label: 'agent files' },
