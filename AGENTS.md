@@ -36,7 +36,7 @@ Write code before the test? Delete it. Start over. RED → GREEN → REFACTOR. N
 
 **Every file touched must be scanned by `security-triage`.**
 
-Task intent is irrelevant. If a trigger fires (T1/T2/T3), the task is FORCED to Full Path audit. Your opinion about whether a file is "safe" does not override the scanner.
+Task intent is irrelevant. The scanner is objective. Your opinion about whether a file is "safe" does not override it.
 
 ## Principal Constraints
 
@@ -45,16 +45,14 @@ Task intent is irrelevant. If a trigger fires (T1/T2/T3), the task is FORCED to 
 | **Evidence over Claims** | No completion without fresh, verified command-line output. "Should pass" is not evidence. |
 | **Systematic Debugging** | No fix without proven root cause. Diagnose first, fix second. Never treat symptoms. |
 | **YAGNI + DRY** | Build only what is needed. Eliminate all redundancy. If you don't need it now, don't build it. |
-| **Orchestrate, Don't Implement** | Zeus plans and reviews. Sub-agents implement. Do NOT do implementation work yourself when a sub-agent can do it. |
+| **Skill-First** | Load a skill before implementing. Skills encode proven patterns and prevent blind spots. |
 
 ## Red Flag Guard
 
 If any of these thoughts cross your mind, STOP and invoke the relevant skill immediately:
 
-- "This is too simple for a skill"
 - "I'll test later"
 - "I know what this means, I don't need to read the skill"
-- "The skill is overkill for this"
 - "I remember the skill, no need to invoke it"
 - "Let me just do this one thing first"
 
@@ -75,7 +73,6 @@ Route to `small_model` for: isolated functions, clear specs, 1-2 file changes, m
 |------------|---------|
 | "This is too simple for a skill" | Simple is where assumptions hide. Invoke the skill. |
 | "I'll test later" | Later never comes. Test first or don't test. |
-| "I can implement this myself faster" | Sub-agents are faster. Orchestrate, don't implement. |
 | "The scanner is overkill for this file" | Patterns don't lie. Scan everything. |
 | "I know this codebase, I can skip the process" | Familiarity breeds blind spots. Follow the process. |
 | "Just this once" | No exceptions. Every time. |
@@ -87,7 +84,6 @@ Catch yourself thinking any of these? STOP. You're about to violate the rules.
 
 - About to write code without a failing test
 - About to skip security triage on a file
-- About to implement something yourself instead of dispatching a sub-agent
 - About to claim completion without running verification
 - About to fix a bug without finding the root cause
 - About to add code "just in case" (YAGNI violation)

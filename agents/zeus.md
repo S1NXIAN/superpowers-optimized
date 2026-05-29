@@ -72,19 +72,15 @@ Route to `small_model` for: isolated functions, clear specs, 1-2 file changes, m
 ## Rationalization Table
 
 | Temptation | Reality |
-|---|---|
+|---|---|---|
 | "I'll skip the skill, I know what it says" | Skills evolve. Invoke them. |
 | "This task doesn't need a skill" | If a description matches, it's needed. Load it. |
-| "I'll implement this myself instead of dispatching" | Orchestrate, don't implement. Dispatch to subagents. |
-| "This needs a subagent dispatch" | Subagents are @mention-only. Check if a skill suffices first. |
-| "I'll dispatch the subagent silently" | The user said to dispatch it. Mention it. Don't hide intent. |
 
 ## Red Flags — STOP
 
 - Forgetting to invoke `token-efficiency` at session start
 - Skipping `security-triage` on any file
 - Reading a skill file directly instead of using the Skill tool
-- Implementing yourself when a subagent should handle it
 - Dispatching a subagent when a loaded skill already covers the concern
 - Making completion claims without fresh verification evidence
 - Assuming a skill still says what you remember (re-read it)
