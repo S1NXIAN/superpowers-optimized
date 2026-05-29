@@ -37,14 +37,6 @@ describe('lib/constants', () => {
     }
   });
 
-  it('includes LITE.md in FILE_COPIES with correct properties', () => {
-    const entry = FILE_COPIES.find(fc => fc.repoRel === 'LITE.md');
-    assert.ok(entry, 'LITE.md not found in FILE_COPIES');
-    assert.equal(entry.repoRel, 'LITE.md');
-    assert.equal(entry.configRel, 'LITE.md');
-    assert.equal(entry.executable, false);
-  });
-
   it('exports DIR_COPIES as array with repoRel, configRel properties', () => {
     assert.ok(Array.isArray(DIR_COPIES));
     assert.ok(DIR_COPIES.length > 0);

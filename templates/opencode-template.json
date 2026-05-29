@@ -14,7 +14,7 @@
   },
   "autoupdate": false,
   "default_agent": "zeus",
-  "instructions": ["AGENTS.md", "LITE.md"],
+  "instructions": ["AGENTS.md"],
   "skills": {
     "paths": ["skills/opencode-zeus"]
   }

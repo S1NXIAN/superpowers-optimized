@@ -70,7 +70,7 @@ function planJsonRevert(config) {
   }
   const instructions = config.instructions || [];
   const instrArray = Array.isArray(instructions) ? instructions : [instructions];
-  const zeusInstructions = ['AGENTS.md', 'LITE.md'];
+  const zeusInstructions = ['AGENTS.md'];
   const hasAny = zeusInstructions.some(i => instrArray.includes(i));
   if (hasAny) {
     const newInstr = instrArray.filter(i => !zeusInstructions.includes(i));

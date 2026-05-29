@@ -8,6 +8,7 @@ description: The authoritative 8-stage engineering pipeline for complex, multi-f
 High-discipline execution machine for production-grade software.
 
 ## Iron Laws
+- **Token Economy**: Mandatory `token-efficiency` standard active.
 - **Evidence before claims**: Never say "done" without command-line proof.
 - **Security triage is non-negotiable**: Pattern triggers always escalate to audit.
 - **YAGNI + DRY**: Never build more than requested; eliminate all redundancy.

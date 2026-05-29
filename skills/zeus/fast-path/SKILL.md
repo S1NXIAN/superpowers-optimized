@@ -8,7 +8,8 @@ description: High-speed TDD workflow for low-complexity tasks (≤ 2 files, sing
 Optimized cycle for trivial fixes, renames, and updates.
 
 ## Hard Gate
-All criteria must be true to remain on Fast Path:
+- **Standard:** Invoke `token-efficiency` standard logic.
+- **Scope:** All criteria must be true to remain on Fast Path:
 - Change scope is small (≤ 2 files)
 - No new behavior or architecture change
 - No cross-module dependency risk

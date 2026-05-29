@@ -28,7 +28,6 @@
 * 🧠 **Multi-Perspective Architecture Audits** - Implements the `deliberation-gate` skill to simulate distinct agent perspectives (Skeptic, Minimalist, Maintainer) before any complex, multi-file architectural work begins.
 * 🤝 **Consequence-Weighted Sub-Agents** - Dispatches isolated units of implementation work to sub-agents with strict, context-injected social-accountability framing (roles include Implementer, Spec Reviewer, Code Quality Reviewer, and Security Reviewer).
 * 🔄 **ASI (Anti-Regression) Fix Loop** - Resolves complex, overlapping-code errors one file and one issue at a time using test-reproducer isolation and `asi.sh` state machines to prevent cascading regressions.
-* ⚡ **Optional Token-Saving Lite Mode** - Supports response compression via a highly optimized "caveman" communication standard (defined in `LITE.md`) that reduces LLM token consumption by up to 75% without compromising technical precision.
 
 ## Getting Started
 
@@ -154,7 +153,6 @@ For simple changes, Zeus streamlines the process to maintain speed without sacri
 | :--- | :--- |
 | **`agent/zeus.md`** | The primary Zeus orchestrator agent definition, housing decision trees and routing workflows. |
 | **`AGENTS.md`** | Global zeus alignment rules and non-negotiable instruction hierarchy. |
-| **`LITE.md`** | Communication protocol definition for caveman-style, token-saving responses. |
 | **`scripts/verify-hash.sh`** | Anti-TOCTOU hash verification utility for security-critical environments. |
 | **`bin/setup.mjs`** | Installation script for merging configuration files and registering skills. |
 | **`bin/uninstall.mjs`** | Uninstallation script to cleanly restore original configurations and remove files. |
